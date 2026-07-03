@@ -1,7 +1,6 @@
 import express from "express";
 import path from "path";
 import dotenv from "dotenv";
-import { GoogleGenAI, Type } from "@google/genai";
 import { createServer as createViteServer } from "vite";
 import { Agent, Workflow, ChatMessage, WorkflowRunLog, WorkflowRunResult } from "./src/types";
 
@@ -13,25 +12,54 @@ const PORT = Number(process.env.PORT) || 3000;
 
 app.use(express.json({ limit: '10mb' }));
 
-// Initialize Gemini SDK lazily to prevent crashing if GEMINI_API_KEY is not defined yet
-let aiClient: GoogleGenAI | null = null;
+type DeepSeekMessage = {
+  role: "system" | "user" | "assistant";
+  content: string;
+};
 
-function getAiClient(): GoogleGenAI {
-  if (!aiClient) {
-    const apiKey = process.env.GEMINI_API_KEY;
-    if (!apiKey) {
-      throw new Error("GEMINI_API_KEY environment variable is missing. Please configure it in Settings > Secrets.");
-    }
-    aiClient = new GoogleGenAI({
-      apiKey,
-      httpOptions: {
-        headers: {
-          'User-Agent': 'aistudio-build',
-        }
-      }
-    });
+type DeepSeekChatResponse = {
+  choices?: Array<{
+    message?: {
+      content?: string;
+    };
+  }>;
+  error?: {
+    message?: string;
+  };
+};
+
+const DEEPSEEK_API_URL = process.env.DEEPSEEK_API_URL || "https://api.deepseek.com/chat/completions";
+const DEEPSEEK_MODEL = "deepseek-v4-flash";
+
+function getDeepSeekApiKey(): string {
+  const apiKey = process.env.VITE_DEEPSEEK_API_KEY || process.env.DEEPSEEK_API_KEY;
+  if (!apiKey) {
+    throw new Error("VITE_DEEPSEEK_API_KEY environment variable is missing. Please configure it in EdgeOne Pages environment variables.");
   }
-  return aiClient;
+  return apiKey;
+}
+
+async function callDeepSeek(messages: DeepSeekMessage[], temperature = 0.7): Promise<string> {
+  const response = await fetch(DEEPSEEK_API_URL, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${getDeepSeekApiKey()}`,
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      model: DEEPSEEK_MODEL,
+      messages,
+      temperature,
+      stream: false,
+    }),
+  });
+
+  const data = await response.json().catch(() => null) as DeepSeekChatResponse | null;
+  if (!response.ok) {
+    throw new Error(data?.error?.message || `DeepSeek API request failed with status ${response.status}.`);
+  }
+
+  return data?.choices?.[0]?.message?.content?.trim() || "抱歉，DeepSeek 没有返回任何内容，请重试。";
 }
 
 // In-memory Database for Community Resources
@@ -577,25 +605,21 @@ app.post("/api/agent/chat", async (req, res) => {
       return res.status(400).json({ error: "Missing or invalid chat messages." });
     }
 
-    const ai = getAiClient();
+    const deepSeekMessages: DeepSeekMessage[] = [
+      {
+        role: "system",
+        content: systemInstruction || "You are a helpful smart agent.",
+      },
+      ...messages.map((msg: ChatMessage) => ({
+        role: msg.role === "user" ? "user" as const : "assistant" as const,
+        content: msg.text,
+      })),
+    ];
 
-    // Map message list to Gemini contents format
-    // Roles in @google/genai contents are 'user' or 'model'.
-    const contents = messages.map(msg => ({
-      role: msg.role === 'user' ? 'user' : 'model',
-      parts: [{ text: msg.text }]
-    }));
-
-    const response = await ai.models.generateContent({
-      model: "gemini-3.5-flash",
-      contents,
-      config: {
-        systemInstruction: systemInstruction || "You are a helpful smart agent.",
-        temperature: temperature !== undefined ? Number(temperature) : 0.7,
-      }
-    });
-
-    const replyText = response.text || "抱歉，大模型没有返回任何内容，请重试。";
+    const replyText = await callDeepSeek(
+      deepSeekMessages,
+      temperature !== undefined ? Number(temperature) : 0.7,
+    );
     res.json({ reply: replyText });
   } catch (error: any) {
     console.error("Error in /api/agent/chat:", error);
@@ -612,7 +636,6 @@ app.post("/api/workflow/run", async (req, res) => {
       return res.status(400).json({ error: "No steps provided for workflow." });
     }
 
-    const ai = getAiClient();
     const runLogs: WorkflowRunLog[] = [];
     
     // Maintain execution context
@@ -642,16 +665,16 @@ app.post("/api/workflow/run", async (req, res) => {
       console.log(`Running step "${step.name}". Resolved prompt preview: ${resolvedPrompt.substring(0, 100)}...`);
 
       try {
-        const stepResponse = await ai.models.generateContent({
-          model: "gemini-3.5-flash",
-          contents: resolvedPrompt,
-          config: {
-            systemInstruction: step.systemInstruction || "You are a highly efficient assistant completing a precise workflow sub-task.",
-            temperature: 0.5
-          }
-        });
-
-        const stepResult = stepResponse.text || "";
+        const stepResult = await callDeepSeek([
+          {
+            role: "system",
+            content: step.systemInstruction || "You are a highly efficient assistant completing a precise workflow sub-task.",
+          },
+          {
+            role: "user",
+            content: resolvedPrompt,
+          },
+        ], 0.5);
         
         // Save in context
         context[step.outputVarName] = stepResult;
