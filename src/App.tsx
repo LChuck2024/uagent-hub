@@ -5,6 +5,7 @@ import { WorkflowRunner } from "./components/WorkflowRunner";
 import { CustomCreator } from "./components/CustomCreator";
 import { ParentChildChallenge } from "./components/ParentChildChallenge";
 import { initialAgents, initialWorkflows } from "./data/communityResources";
+import { readJsonResponse } from "./lib/api";
 import { 
   Bot, 
   Zap, 
@@ -53,7 +54,10 @@ export default function App() {
         loadFallbackResources();
         return;
       }
-      const data = await res.json();
+      const data = await readJsonResponse<{ agents?: Agent[]; workflows?: Workflow[] }>(
+        res,
+        "资源接口返回异常，已使用内置资源。",
+      );
       const nextAgents = data.agents || [];
       const nextWorkflows = data.workflows || [];
       if (nextAgents.length === 0 && nextWorkflows.length === 0) {
@@ -108,6 +112,7 @@ export default function App() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ type, resource })
       });
+      await readJsonResponse(response, "发布失败，请检查线上 API 是否已部署。");
       if (response.ok) {
         alert(`🎉 发布成功！您的自定义${type === "agent" ? "智能体" : "工作流"}已成功注入到智能生态大厅中。`);
         setShowCreator(false);

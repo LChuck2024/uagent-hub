@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Agent, ChatMessage } from "../types";
 import { Markdown } from "./Markdown";
+import { readJsonResponse } from "../lib/api";
 import { Send, Sparkles, Sliders, RefreshCw, AlertCircle, Bot, User, CheckCircle, Copy, Download } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
@@ -108,8 +109,7 @@ export function AgentChat({ agent, onBack, onShare }: AgentChatProps) {
         })
       });
 
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "大模型呼叫异常");
+      const data = await readJsonResponse<{ reply: string }>(response, "大模型呼叫异常");
 
       const modelMsg: ChatMessage = {
         id: Math.random().toString(36).substring(7),
@@ -188,8 +188,7 @@ export function AgentChat({ agent, onBack, onShare }: AgentChatProps) {
         })
       });
 
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "大模型连接异常");
+      const data = await readJsonResponse<{ reply: string }>(response, "大模型连接异常");
 
       const modelMsg: ChatMessage = {
         id: Math.random().toString(36).substring(7),
@@ -244,8 +243,7 @@ export function AgentChat({ agent, onBack, onShare }: AgentChatProps) {
         })
       });
 
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "大模型呼叫异常");
+      const data = await readJsonResponse<{ reply: string }>(response, "大模型呼叫异常");
 
       const modelMsg: ChatMessage = {
         id: Math.random().toString(36).substring(7),

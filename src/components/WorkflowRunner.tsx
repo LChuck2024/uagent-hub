@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Workflow, WorkflowRunLog } from "../types";
 import { Markdown } from "./Markdown";
+import { readJsonResponse } from "../lib/api";
 import { Play, PlayCircle, Loader2, CheckCircle2, XCircle, AlertCircle, Eye, Settings, Terminal, Database, ArrowDown, HelpCircle, Heart, Zap, Copy } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
@@ -91,8 +92,11 @@ export function WorkflowRunner({ workflow, onBack, onShare }: WorkflowRunnerProp
         })
       });
 
-      const data = await response.json();
-      if (!response.ok) throw new Error(data.error || "工作流运行时异常");
+      const data = await readJsonResponse<{
+        success: boolean;
+        logs: WorkflowRunLog[];
+        finalOutput: string;
+      }>(response, "工作流运行时异常");
 
       setLogs(data.logs);
       setFinalOutput(data.finalOutput);
