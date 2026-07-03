@@ -4,6 +4,7 @@ import { AgentChat } from "./components/AgentChat";
 import { WorkflowRunner } from "./components/WorkflowRunner";
 import { CustomCreator } from "./components/CustomCreator";
 import { ParentChildChallenge } from "./components/ParentChildChallenge";
+import { initialAgents, initialWorkflows } from "./data/communityResources";
 import { 
   Bot, 
   Zap, 
@@ -38,18 +39,32 @@ export default function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [sortBy, setSortBy] = useState<"hot" | "likes" | "new">("hot");
 
-  // Load resources from database
+  const loadFallbackResources = () => {
+    setAgents(initialAgents);
+    setWorkflows(initialWorkflows);
+  };
+
+  // Load resources from API, with bundled data as a static-hosting fallback.
   const fetchResources = async () => {
     try {
       setIsLoading(true);
       const res = await fetch("/api/community/resources");
-      if (res.ok) {
-        const data = await res.json();
-        setAgents(data.agents || []);
-        setWorkflows(data.workflows || []);
+      if (!res.ok) {
+        loadFallbackResources();
+        return;
       }
+      const data = await res.json();
+      const nextAgents = data.agents || [];
+      const nextWorkflows = data.workflows || [];
+      if (nextAgents.length === 0 && nextWorkflows.length === 0) {
+        loadFallbackResources();
+        return;
+      }
+      setAgents(nextAgents);
+      setWorkflows(nextWorkflows);
     } catch (err) {
       console.error("Error fetching community resources:", err);
+      loadFallbackResources();
     } finally {
       setIsLoading(false);
     }

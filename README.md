@@ -165,6 +165,8 @@ NODE_ENV="production"
 
 `npm start` 已内置 `NODE_ENV=production`，在常见 Linux/macOS 环境中可直接使用。
 
+如果只部署 Vite 静态产物到 EdgeOne Pages，内置智能体和工作流会从前端打包数据中兜底展示；但聊天、工作流执行、自定义发布、点赞统计等接口仍需要后端 API 或 EdgeOne Functions 承接。
+
 ## 注意事项
 
 - 网页标签页标题配置在 `index.html` 中。
