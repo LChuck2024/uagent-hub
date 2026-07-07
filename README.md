@@ -89,6 +89,12 @@ npm run build
 构建前端静态资源，并打包服务端入口到 `dist/server.cjs`。
 
 ```bash
+npm run build:pages
+```
+
+构建前端静态资源，并打包 EdgeOne Edge Function 到 `edge-functions/api/[[default]].js`（EdgeOne Pages 部署用）。
+
+```bash
 npm start
 ```
 
@@ -111,6 +117,10 @@ npm run clean
 ```text
 .
 ├── index.html
+├── edgeone.json
+├── edge-functions
+│   ├── _src
+│   └── api/[[default]].js
 ├── server.ts
 ├── package.json
 ├── vite.config.ts
@@ -141,6 +151,31 @@ npm run clean
 当前自定义资源和互动数据保存在服务端内存中，重启服务后会重置。如果要用于长期部署，需要接入数据库或持久化存储。
 
 ## 生产构建与部署
+
+### EdgeOne Pages（推荐）
+
+EdgeOne Pages **只托管静态文件**，API 由 **`edge-functions/api/[[default]].js`** 承接（构建时由 `scripts/bundle-edge-api.mjs` 自动打包）。
+
+```bash
+npm run build:pages
+```
+
+项目已含 `edgeone.json`：
+
+- 构建命令：`npm run build:pages`
+- 输出目录：`dist/`
+
+**EdgeOne 控制台 → 环境变量**（至少一项）：
+
+| 变量 | 说明 |
+|------|------|
+| `VITE_DEEPSEEK_API_KEY` | DeepSeek API Key（服务端调用，勿在前端读取） |
+
+部署后可用响应头 `X-UAgent-Hub-Api: edge-v1` 或 `GET /api/health` 确认 Edge Function 已生效。
+
+**EdgeOne 限制**：自定义发布与点赞/运行统计无持久化存储（刷新后重置）；内置智能体与工作流的聊天、执行不受影响。
+
+### 独立 Node 服务
 
 先构建：
 
