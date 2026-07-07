@@ -75,3 +75,37 @@ export interface WorkflowRunResult {
   logs: WorkflowRunLog[];
   finalOutput: string;
 }
+
+export type PricingMode = 'free' | 'per_use' | 'subscription';
+
+export interface TenantPricing {
+  mode: PricingMode;
+  priceLabel: string;
+  ctaText: string;
+  ctaUrl?: string;
+}
+
+export interface TenantSite {
+  slug: string;
+  sourceAgentId: string;
+  title: string;
+  logo: string;
+  welcomeMessage: string;
+  systemInstruction: string;
+  temperature: number;
+  pricing: TenantPricing;
+  adminPin: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+/** Public tenant config — adminPin stripped for landing page consumers. */
+export type TenantSitePublic = Omit<TenantSite, 'adminPin'>;
+
+export interface TenantCloneResponse {
+  success: boolean;
+  adminPin: string;
+  siteUrl: string;
+  adminUrl: string;
+  tenant: TenantSitePublic;
+}

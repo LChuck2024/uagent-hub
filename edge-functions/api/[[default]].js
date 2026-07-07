@@ -108,7 +108,7 @@ var API_VERSION = "edge-v2";
 function corsHeaders() {
   return {
     "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
     "X-UAgent-Hub-Api": API_VERSION
   };
@@ -659,6 +659,126 @@ var initialWorkflows = [
   }
 ];
 
+// lib/tenantHost.mjs
+var ROOT_DOMAIN = (process.env.VITE_TENANT_DOMAIN || "uagent.site").toLowerCase();
+var RESERVED_SLUGS = /* @__PURE__ */ new Set([
+  "www",
+  "api",
+  "admin",
+  "app",
+  "cdn",
+  "static",
+  "mail",
+  "dev",
+  "staging"
+]);
+var SLUG_PATTERN = /^[a-z0-9](?:[a-z0-9-]{0,30}[a-z0-9])?$/;
+function isValidSlug(slug) {
+  return SLUG_PATTERN.test(slug) && !RESERVED_SLUGS.has(slug);
+}
+function buildTenantUrls(slug, hostname, port = "3000") {
+  const rootDomain = (process.env.VITE_TENANT_DOMAIN || "uagent.site").toLowerCase();
+  const host = String(hostname || "").split(":")[0].toLowerCase();
+  const isDev = process.env.NODE_ENV !== "production" || host === "localhost" || host === "127.0.0.1" || host.endsWith(".localhost");
+  if (isDev) {
+    const portSuffix = port ? `:${port}` : "";
+    return {
+      siteUrl: `http://${slug}.localhost${portSuffix}`,
+      adminUrl: `http://${slug}.localhost${portSuffix}/admin`
+    };
+  }
+  return {
+    siteUrl: `https://${slug}.${rootDomain}`,
+    adminUrl: `https://${slug}.${rootDomain}/admin`
+  };
+}
+
+// lib/tenantCore.mjs
+function generateAdminPin() {
+  return String(Math.floor(1e3 + Math.random() * 9e3));
+}
+function toPublicTenant(tenant) {
+  const { adminPin: _pin, ...publicTenant } = tenant;
+  return publicTenant;
+}
+function buildTenantFromAgent(slug, agent) {
+  const now = (/* @__PURE__ */ new Date()).toISOString();
+  return {
+    slug,
+    sourceAgentId: agent.id,
+    title: agent.name,
+    logo: agent.avatar,
+    welcomeMessage: `\u6B22\u8FCE\u4F7F\u7528 ${agent.name}\uFF01\u8F93\u5165\u4F60\u7684\u95EE\u9898\uFF0C\u5373\u523B\u83B7\u5F97 AI \u56DE\u590D\u3002`,
+    systemInstruction: agent.systemInstruction,
+    temperature: agent.temperature ?? 0.7,
+    pricing: {
+      mode: "free",
+      priceLabel: "\u514D\u8D39\u4F53\u9A8C",
+      ctaText: "\u5347\u7EA7\u4F1A\u5458\u89E3\u9501\u66F4\u591A\u6B21\u6570",
+      ctaUrl: ""
+    },
+    adminPin: generateAdminPin(),
+    createdAt: now,
+    updatedAt: now
+  };
+}
+var UPDATABLE_FIELDS = /* @__PURE__ */ new Set([
+  "title",
+  "logo",
+  "welcomeMessage",
+  "systemInstruction",
+  "temperature",
+  "pricing"
+]);
+function applyTenantUpdates(existing, body) {
+  const next = { ...existing, updatedAt: (/* @__PURE__ */ new Date()).toISOString() };
+  for (const key of UPDATABLE_FIELDS) {
+    if (body[key] !== void 0) {
+      next[key] = body[key];
+    }
+  }
+  return next;
+}
+async function resolveChatConfig(body, readTenantFn, isValidSlugFn) {
+  const { systemInstruction, temperature, messages, tenantSlug } = body;
+  if (!messages || !Array.isArray(messages) || messages.length === 0) {
+    const err = new Error("Missing or invalid chat messages.");
+    err.statusCode = 400;
+    throw err;
+  }
+  let resolvedInstruction = systemInstruction || "You are a helpful smart agent.";
+  let resolvedTemp = temperature !== void 0 ? Number(temperature) : 0.7;
+  if (tenantSlug) {
+    const slug = String(tenantSlug).toLowerCase();
+    if (!isValidSlugFn(slug)) {
+      const err = new Error("Invalid tenant slug.");
+      err.statusCode = 400;
+      throw err;
+    }
+    const tenant = await readTenantFn(slug);
+    if (!tenant) {
+      const err = new Error("Tenant not found.");
+      err.statusCode = 404;
+      throw err;
+    }
+    resolvedInstruction = tenant.systemInstruction;
+    resolvedTemp = tenant.temperature ?? 0.7;
+  }
+  return { resolvedInstruction, resolvedTemp, messages };
+}
+
+// edge-functions/_src/tenantMemory.mjs
+var tenants = /* @__PURE__ */ new Map();
+function readTenant(slug) {
+  return tenants.get(slug) ?? null;
+}
+function writeTenant(tenant) {
+  tenants.set(tenant.slug, tenant);
+}
+function tenantExists(slug) {
+  return tenants.has(slug);
+}
+
 // edge-functions/_src/handlers.mjs
 function handleResourcesGet() {
   return jsonResponse({
@@ -673,14 +793,26 @@ async function handleChatPost(context) {
   } catch {
     return jsonResponse({ error: "Invalid JSON body." }, 400);
   }
-  const { systemInstruction, temperature, messages } = body;
-  if (!messages || !Array.isArray(messages) || messages.length === 0) {
-    return jsonResponse({ error: "Missing or invalid chat messages." }, 400);
+  let resolvedInstruction;
+  let resolvedTemp;
+  let messages;
+  try {
+    const resolved = await resolveChatConfig(
+      body,
+      async (slug) => readTenant(slug),
+      isValidSlug
+    );
+    resolvedInstruction = resolved.resolvedInstruction;
+    resolvedTemp = resolved.resolvedTemp;
+    messages = resolved.messages;
+  } catch (error) {
+    const status = error.statusCode || 400;
+    return jsonResponse({ error: error.message || "Invalid chat request." }, status);
   }
   const deepSeekMessages = [
     {
       role: "system",
-      content: systemInstruction || "You are a helpful smart agent."
+      content: resolvedInstruction
     },
     ...messages.map((msg) => ({
       role: msg.role === "user" ? "user" : "assistant",
@@ -695,7 +827,7 @@ async function handleChatPost(context) {
         const reply = await callDeepSeekStream(
           context.env || {},
           deepSeekMessages,
-          temperature !== void 0 ? Number(temperature) : 0.7,
+          resolvedTemp,
           (delta, partial) => write({ delta, partial })
         );
         write({ done: true, reply });
@@ -834,10 +966,84 @@ async function handleInteractionPost(context) {
   const found = lists.some((list) => list.some((item) => item.id === id));
   return jsonResponse({ success: found });
 }
+function findAgentById(agentId) {
+  return initialAgents.find((a) => a.id === agentId) ?? null;
+}
+function handleTenantGet(_context, slug) {
+  const normalized = slug.toLowerCase();
+  if (!isValidSlug(normalized)) {
+    return jsonResponse({ error: "Invalid tenant slug." }, 400);
+  }
+  const tenant = readTenant(normalized);
+  if (!tenant) {
+    return jsonResponse({ error: "Tenant not found." }, 404);
+  }
+  return jsonResponse({ tenant: toPublicTenant(tenant) });
+}
+async function handleTenantClonePost(context) {
+  let body = {};
+  try {
+    body = await context.request.json();
+  } catch {
+    return jsonResponse({ error: "Invalid JSON body." }, 400);
+  }
+  const slug = typeof body.slug === "string" ? body.slug.trim().toLowerCase() : "";
+  const sourceAgentId = typeof body.sourceAgentId === "string" ? body.sourceAgentId.trim() : "";
+  if (!slug || !isValidSlug(slug)) {
+    return jsonResponse({ error: "Invalid or missing slug." }, 400);
+  }
+  if (!sourceAgentId) {
+    return jsonResponse({ error: "Missing sourceAgentId." }, 400);
+  }
+  if (tenantExists(slug)) {
+    return jsonResponse({ error: `\u5B50\u57DF\u540D\u300C${slug}\u300D\u5DF2\u88AB\u5360\u7528\uFF0C\u8BF7\u6362\u4E00\u4E2A\u540D\u79F0\u3002` }, 409);
+  }
+  const agent = findAgentById(sourceAgentId);
+  if (!agent) {
+    return jsonResponse({ error: "Source agent not found." }, 404);
+  }
+  const tenant = buildTenantFromAgent(slug, agent);
+  writeTenant(tenant);
+  const host = new URL(context.request.url).hostname;
+  const { siteUrl, adminUrl } = buildTenantUrls(slug, host);
+  return jsonResponse({
+    success: true,
+    adminPin: tenant.adminPin,
+    siteUrl,
+    adminUrl,
+    tenant: toPublicTenant(tenant)
+  });
+}
+async function handleTenantPut(context, slug) {
+  let body = {};
+  try {
+    body = await context.request.json();
+  } catch {
+    return jsonResponse({ error: "Invalid JSON body." }, 400);
+  }
+  const normalized = slug.toLowerCase();
+  if (!isValidSlug(normalized)) {
+    return jsonResponse({ error: "Invalid tenant slug." }, 400);
+  }
+  const existing = readTenant(normalized);
+  if (!existing) {
+    return jsonResponse({ error: "Tenant not found." }, 404);
+  }
+  if (!body.adminPin || body.adminPin !== existing.adminPin) {
+    return jsonResponse({ error: "Invalid admin PIN." }, 403);
+  }
+  const updated = applyTenantUpdates(existing, body);
+  writeTenant(updated);
+  return jsonResponse({ success: true, tenant: toPublicTenant(updated) });
+}
 
 // edge-functions/_src/api.mjs
 function routePath(context) {
   return new URL(context.request.url).pathname.replace(/\/+$/, "") || "/";
+}
+function matchTenantSlug(path) {
+  const match = path.match(/^\/api\/tenant\/([a-z0-9-]+)$/);
+  return match ? match[1] : null;
 }
 function onRequestGet(context) {
   const path = routePath(context);
@@ -846,6 +1052,10 @@ function onRequestGet(context) {
   }
   if (path === "/api/health") {
     return jsonResponse({ api: API_VERSION, ok: true });
+  }
+  const tenantSlug = matchTenantSlug(path);
+  if (tenantSlug) {
+    return handleTenantGet(context, tenantSlug);
   }
   return jsonResponse({ error: "Not found." }, 404);
 }
@@ -863,12 +1073,23 @@ async function onRequestPost(context) {
       return handleSharePost(context);
     case "/api/community/interaction":
       return handleInteractionPost(context);
+    case "/api/tenant/clone":
+      return handleTenantClonePost(context);
     default:
       return jsonResponse({ error: "Not found." }, 404);
   }
 }
+async function onRequestPut(context) {
+  const path = routePath(context);
+  const tenantSlug = matchTenantSlug(path);
+  if (tenantSlug) {
+    return handleTenantPut(context, tenantSlug);
+  }
+  return jsonResponse({ error: "Not found." }, 404);
+}
 export {
   onRequestGet,
   onRequestOptions,
-  onRequestPost
+  onRequestPost,
+  onRequestPut
 };

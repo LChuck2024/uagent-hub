@@ -5,7 +5,7 @@ export { DEEPSEEK_API_URL, DEEPSEEK_MODEL, resolveTemplate, sseLine, callDeepSee
 export function corsHeaders() {
   return {
     "Access-Control-Allow-Origin": "*",
-    "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type",
     "X-UAgent-Hub-Api": API_VERSION,
   };

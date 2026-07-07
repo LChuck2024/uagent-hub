@@ -4,11 +4,19 @@ import {
   handleInteractionPost,
   handleResourcesGet,
   handleSharePost,
+  handleTenantClonePost,
+  handleTenantGet,
+  handleTenantPut,
   handleWorkflowRunPost,
 } from "./handlers.mjs";
 
 function routePath(context) {
   return new URL(context.request.url).pathname.replace(/\/+$/, "") || "/";
+}
+
+function matchTenantSlug(path) {
+  const match = path.match(/^\/api\/tenant\/([a-z0-9-]+)$/);
+  return match ? match[1] : null;
 }
 
 export function onRequestGet(context) {
@@ -19,6 +27,12 @@ export function onRequestGet(context) {
   if (path === "/api/health") {
     return jsonResponse({ api: API_VERSION, ok: true });
   }
+
+  const tenantSlug = matchTenantSlug(path);
+  if (tenantSlug) {
+    return handleTenantGet(context, tenantSlug);
+  }
+
   return jsonResponse({ error: "Not found." }, 404);
 }
 
@@ -38,7 +52,18 @@ export async function onRequestPost(context) {
       return handleSharePost(context);
     case "/api/community/interaction":
       return handleInteractionPost(context);
+    case "/api/tenant/clone":
+      return handleTenantClonePost(context);
     default:
       return jsonResponse({ error: "Not found." }, 404);
   }
+}
+
+export async function onRequestPut(context) {
+  const path = routePath(context);
+  const tenantSlug = matchTenantSlug(path);
+  if (tenantSlug) {
+    return handleTenantPut(context, tenantSlug);
+  }
+  return jsonResponse({ error: "Not found." }, 404);
 }

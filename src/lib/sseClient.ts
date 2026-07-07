@@ -98,6 +98,34 @@ export async function streamAgentChat(
   });
 }
 
+/** Tenant landing chat — prompt resolved server-side from tenantSlug (never sent from client). */
+export async function streamTenantChat(
+  body: {
+    tenantSlug: string;
+    messages: { role: string; text: string }[];
+  },
+  onPartial: (text: string) => void,
+): Promise<string> {
+  const response = await fetch("/api/agent/chat", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(body),
+  });
+
+  return consumeSseStream(response, {
+    onDelta: onPartial,
+    finalize: (events) => {
+      const done = [...events].reverse().find((e) => e.done);
+      if (done && typeof done.reply === "string") return done.reply;
+      const partial = [...events].reverse().find((e) => typeof e.partial === "string");
+      if (partial && typeof partial.partial === "string" && partial.partial.trim()) {
+        return partial.partial;
+      }
+      throw new Error("流式响应未返回完整内容");
+    },
+  });
+}
+
 export type WorkflowStreamResult = {
   success: boolean;
   logs: import("../types").WorkflowRunLog[];

@@ -527,3 +527,8 @@ export const initialWorkflows: Workflow[] = [
     runs: 4890
   }
 ];
+
+/** Top-N agents by runs for the storefront showcase. */
+export function getFeaturedAgents(agents: Agent[], limit = 9): Agent[] {
+  return [...agents].sort((a, b) => (b.runs || 0) - (a.runs || 0)).slice(0, limit);
+}
