@@ -145,8 +145,8 @@ npm run clean
 - `GET /api/community/resources`：获取内置与自定义智能体、工作流。
 - `POST /api/community/share`：发布自定义智能体或工作流。
 - `POST /api/community/interaction`：记录点赞或运行次数。
-- `POST /api/agent/chat`：与指定智能体对话。
-- `POST /api/workflow/run`：按步骤执行工作流。
+- `POST /api/agent/chat`：与指定智能体对话（SSE 流式）。
+- `POST /api/workflow/run`：按步骤执行工作流（SSE 流式，逐步推送 delta）。
 
 当前自定义资源和互动数据保存在服务端内存中，重启服务后会重置。如果要用于长期部署，需要接入数据库或持久化存储。
 
@@ -171,7 +171,7 @@ npm run build:pages
 |------|------|
 | `VITE_DEEPSEEK_API_KEY` | DeepSeek API Key（服务端调用，勿在前端读取） |
 
-部署后可用响应头 `X-UAgent-Hub-Api: edge-v1` 或 `GET /api/health` 确认 Edge Function 已生效。
+部署后可用响应头 `X-UAgent-Hub-Api: edge-v2` 或 `GET /api/health` 确认 Edge Function 已生效。
 
 **EdgeOne 限制**：自定义发布与点赞/运行统计无持久化存储（刷新后重置）；内置智能体与工作流的聊天、执行不受影响。
 

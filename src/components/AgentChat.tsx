@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
 import { Agent, ChatMessage } from "../types";
 import { Markdown } from "./Markdown";
-import { readJsonResponse } from "../lib/api";
+import { streamAgentChat } from "../lib/sseClient";
 import { Send, Sparkles, Sliders, RefreshCw, AlertCircle, Bot, User, CheckCircle, Copy, Download } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
@@ -85,40 +85,45 @@ export function AgentChat({ agent, onBack, onShare }: AgentChatProps) {
     URL.revokeObjectURL(url);
   };
 
+  const appendStreamingReply = async (history: ChatMessage[]) => {
+    const modelMsgId = Math.random().toString(36).substring(7);
+    const modelMsg: ChatMessage = {
+      id: modelMsgId,
+      role: "model",
+      text: "",
+      timestamp: new Date().toLocaleTimeString(),
+    };
+    setMessages((prev) => [...prev, modelMsg]);
+
+    await streamAgentChat(
+      {
+        systemInstruction: agent.systemInstruction,
+        temperature: agent.temperature || 0.7,
+        messages: history,
+      },
+      (partial) => {
+        setMessages((prev) =>
+          prev.map((m) => (m.id === modelMsgId ? { ...m, text: partial } : m)),
+        );
+      },
+    );
+  };
+
   // Regenerate last response handler
   const handleRegenerate = async () => {
     if (messages.length < 2 || isLoading) return;
-    const lastUserMsgIndex = [...messages].reverse().findIndex(m => m.role === "user");
+    const lastUserMsgIndex = [...messages].reverse().findIndex((m) => m.role === "user");
     if (lastUserMsgIndex === -1) return;
-    
+
     const actualUserIndex = messages.length - 1 - lastUserMsgIndex;
     const historyUpToUser = messages.slice(0, actualUserIndex + 1);
-    
+
     setMessages(historyUpToUser);
     setIsLoading(true);
     setError(null);
 
     try {
-      const response = await fetch("/api/agent/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          systemInstruction: agent.systemInstruction,
-          temperature: agent.temperature || 0.7,
-          messages: historyUpToUser
-        })
-      });
-
-      const data = await readJsonResponse<{ reply: string }>(response, "大模型呼叫异常");
-
-      const modelMsg: ChatMessage = {
-        id: Math.random().toString(36).substring(7),
-        role: "model",
-        text: data.reply,
-        timestamp: new Date().toLocaleTimeString()
-      };
-
-      setMessages(prev => [...prev, modelMsg]);
+      await appendStreamingReply(historyUpToUser);
     } catch (err: any) {
       setError(err.message || "发送失败，请稍后重试。");
     } finally {
@@ -178,28 +183,8 @@ export function AgentChat({ agent, onBack, onShare }: AgentChatProps) {
     setMessages([userMsg]);
 
     try {
-      const response = await fetch("/api/agent/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          systemInstruction: agent.systemInstruction,
-          temperature: agent.temperature || 0.7,
-          messages: [userMsg]
-        })
-      });
+      await appendStreamingReply([userMsg]);
 
-      const data = await readJsonResponse<{ reply: string }>(response, "大模型连接异常");
-
-      const modelMsg: ChatMessage = {
-        id: Math.random().toString(36).substring(7),
-        role: "model",
-        text: data.reply,
-        timestamp: new Date().toLocaleTimeString()
-      };
-
-      setMessages(prev => [...prev, modelMsg]);
-      
-      // Update run interaction counter
       await fetch("/api/community/interaction", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -233,26 +218,7 @@ export function AgentChat({ agent, onBack, onShare }: AgentChatProps) {
     setIsLoading(true);
 
     try {
-      const response = await fetch("/api/agent/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          systemInstruction: agent.systemInstruction,
-          temperature: agent.temperature || 0.7,
-          messages: updatedMessages
-        })
-      });
-
-      const data = await readJsonResponse<{ reply: string }>(response, "大模型呼叫异常");
-
-      const modelMsg: ChatMessage = {
-        id: Math.random().toString(36).substring(7),
-        role: "model",
-        text: data.reply,
-        timestamp: new Date().toLocaleTimeString()
-      };
-
-      setMessages(prev => [...prev, modelMsg]);
+      await appendStreamingReply(updatedMessages);
     } catch (err: any) {
       setError(err.message || "发送失败，请稍后重试。");
     } finally {
@@ -498,7 +464,7 @@ export function AgentChat({ agent, onBack, onShare }: AgentChatProps) {
                 );
               })}
 
-              {isLoading && (
+              {isLoading && messages[messages.length - 1]?.role === "user" && (
                 <div className="flex gap-3.5 justify-start">
                   <div className="w-8 h-8 rounded-lg bg-violet-600/10 border border-violet-500/20 flex items-center justify-center text-md shrink-0 animate-pulse">
                     {agent.avatar}

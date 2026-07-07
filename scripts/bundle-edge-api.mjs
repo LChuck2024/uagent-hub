@@ -19,4 +19,4 @@ await esbuild.build({
   },
 });
 
-console.log("Bundled edge-functions/api/[[default]].js (edge-v1)");
+console.log("Bundled edge-functions/api/[[default]].js (edge-v2)");

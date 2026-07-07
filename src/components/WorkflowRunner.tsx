@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { Workflow, WorkflowRunLog } from "../types";
 import { Markdown } from "./Markdown";
-import { readJsonResponse } from "../lib/api";
+import { streamWorkflowRun } from "../lib/sseClient";
 import { Play, PlayCircle, Loader2, CheckCircle2, XCircle, AlertCircle, Eye, Settings, Terminal, Database, ArrowDown, HelpCircle, Heart, Zap, Copy } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
@@ -83,30 +83,40 @@ export function WorkflowRunner({ workflow, onBack, onShare }: WorkflowRunnerProp
     setLogs(initialLogs);
 
     try {
-      const response = await fetch("/api/workflow/run", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          steps: workflow.steps,
-          triggerValues
-        })
-      });
-
-      const data = await readJsonResponse<{
-        success: boolean;
-        logs: WorkflowRunLog[];
-        finalOutput: string;
-      }>(response, "工作流运行时异常");
+      const data = await streamWorkflowRun(
+        { steps: workflow.steps, triggerValues },
+        {
+          onStepStart: (stepId, _stepName, inputParsed) => {
+            setLogs((prev) =>
+              prev.map((log) =>
+                log.stepId === stepId
+                  ? { ...log, status: "running" as const, inputParsed }
+                  : log,
+              ),
+            );
+          },
+          onStepDelta: (stepId, partial) => {
+            setLogs((prev) =>
+              prev.map((log) =>
+                log.stepId === stepId ? { ...log, output: partial } : log,
+              ),
+            );
+            setFinalOutput(partial);
+          },
+          onStepDone: (log) => {
+            setLogs((prev) => prev.map((l) => (l.stepId === log.stepId ? log : l)));
+          },
+        },
+      );
 
       setLogs(data.logs);
       setFinalOutput(data.finalOutput);
-      
+
       if (!data.success) {
         setError("工作流执行中断，部分步骤失败。");
         setActiveTab("logs");
       }
 
-      // Track running interaction with server
       await fetch("/api/community/interaction", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
