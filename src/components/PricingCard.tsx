@@ -1,5 +1,5 @@
 import { TenantPricing } from "../types";
-import { Crown, Sparkles, Zap } from "lucide-react";
+import { Crown, Sparkles } from "lucide-react";
 
 interface PricingCardProps {
   pricing: TenantPricing;
@@ -36,14 +36,10 @@ export function PricingCard({ pricing, variant = "sidebar" }: PricingCardProps) 
         >
           {pricing.ctaText}
         </a>
-      ) : (
-        <button
-          type="button"
-          className="w-full py-2.5 rounded-xl bg-stone-100 border border-stone-300 text-stone-700 text-xs font-semibold flex items-center justify-center gap-1.5 cursor-default"
-        >
-          <Zap className="w-3.5 h-3.5 text-amber-400" />
-          {pricing.ctaText}
-        </button>
+      ) : isFree ? null : (
+        <p className="w-full py-2.5 rounded-xl bg-stone-50 border border-stone-200 text-stone-600 text-xs text-center leading-relaxed">
+          联系站长购买
+        </p>
       )}
     </>
   );

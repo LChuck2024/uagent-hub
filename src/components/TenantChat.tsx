@@ -8,9 +8,10 @@ import { motion, AnimatePresence } from "motion/react";
 interface TenantChatProps {
   tenantSlug: string;
   siteTitle: string;
+  welcomeMessage?: string;
 }
 
-export function TenantChat({ tenantSlug, siteTitle }: TenantChatProps) {
+export function TenantChat({ tenantSlug, siteTitle, welcomeMessage }: TenantChatProps) {
   const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -78,8 +79,8 @@ export function TenantChat({ tenantSlug, siteTitle }: TenantChatProps) {
       {/* Messages */}
       <div className="flex-1 overflow-y-auto space-y-4 pr-1 mb-4">
         {messages.length === 0 && (
-          <div className="text-center py-12 text-stone-500 text-sm">
-            输入你的问题，{siteTitle} 即刻为你解答
+          <div className="text-center py-12 text-stone-500 text-sm px-4 leading-relaxed">
+            {welcomeMessage || `输入你的问题，${siteTitle} 即刻为你解答`}
           </div>
         )}
 

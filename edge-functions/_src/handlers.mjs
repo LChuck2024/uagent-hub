@@ -33,6 +33,7 @@ export async function handleChatPost(context) {
       body,
       async (slug) => readTenant(slug),
       isValidSlug,
+      (id) => initialAgents.find((a) => a.id === id) ?? null,
     );
     resolvedInstruction = resolved.resolvedInstruction;
     resolvedTemp = resolved.resolvedTemp;

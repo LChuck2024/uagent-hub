@@ -47,13 +47,17 @@ function beginSse(res: express.Response) {
 let customAgents: Agent[] = [];
 let customWorkflows: Workflow[] = [];
 
+function findAgentById(agentId: string): Agent | undefined {
+  return [...initialAgents, ...customAgents].find((a) => a.id === agentId);
+}
+
 app.post("/api/agent/chat", async (req, res) => {
   let resolvedInstruction: string;
   let resolvedTemp: number;
   let messages: ChatMessage[];
 
   try {
-    const resolved = await resolveChatConfig(req.body, readTenant, isValidSlug);
+    const resolved = await resolveChatConfig(req.body, readTenant, isValidSlug, findAgentById);
     resolvedInstruction = resolved.resolvedInstruction;
     resolvedTemp = resolved.resolvedTemp;
     messages = resolved.messages;
@@ -239,10 +243,6 @@ app.post("/api/community/interaction", (req, res) => {
 
   res.json({ success: found });
 });
-
-function findAgentById(agentId: string): Agent | undefined {
-  return [...initialAgents, ...customAgents].find((a) => a.id === agentId);
-}
 
 // --- Tenant APIs (JSON persistence: data/tenants/{slug}.json) ---
 

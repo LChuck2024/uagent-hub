@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Workflow, WorkflowRunLog } from "../types";
 import { Markdown } from "./Markdown";
 import { streamWorkflowRun } from "../lib/sseClient";
+import { categoryLabel } from "../data/communityResources";
 import { Play, PlayCircle, Loader2, CheckCircle2, XCircle, AlertCircle, Eye, Settings, Terminal, Database, ArrowDown, HelpCircle, Heart, Zap, Copy } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 
@@ -153,7 +154,7 @@ export function WorkflowRunner({ workflow, onBack, onShare }: WorkflowRunnerProp
           <div className="flex items-center justify-between text-[11px] text-stone-500 font-mono pt-1">
             <span>作者: {workflow.author || "官方认证"}</span>
             <span className="flex items-center gap-1">
-              <span>🔥 {workflow.runs || 0} 次编译</span>
+              <span>{categoryLabel(workflow.category)}</span>
             </span>
           </div>
 

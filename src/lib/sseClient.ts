@@ -93,7 +93,9 @@ async function consumeSseStream<T>(
 
 export async function streamAgentChat(
   body: {
-    systemInstruction: string;
+    agentId: string;
+    /** Only for unsaved custom drafts — catalog agents resolve prompt server-side. */
+    systemInstruction?: string;
     temperature?: number;
     messages: { role: string; text: string }[];
   },

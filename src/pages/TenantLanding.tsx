@@ -91,7 +91,11 @@ export function TenantLanding({ slug }: TenantLandingProps) {
       <main className="relative z-10 flex-1 max-w-6xl mx-auto w-full px-4 py-6 md:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-[1fr_280px] gap-6 h-full">
           <div className="glass-panel rounded-2xl border border-stone-200 p-4 md:p-6 flex flex-col min-h-[calc(100vh-12rem)]">
-            <TenantChat tenantSlug={slug} siteTitle={tenant.title} />
+            <TenantChat
+              tenantSlug={slug}
+              siteTitle={tenant.title}
+              welcomeMessage={tenant.welcomeMessage}
+            />
           </div>
 
           <PricingCard pricing={tenant.pricing} variant="sidebar" />

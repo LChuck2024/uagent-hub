@@ -22,6 +22,7 @@ export function CloneModal({ agent, onClose }: CloneModalProps) {
   const [error, setError] = useState<string | null>(null);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState<CloneSuccess | null>(null);
+  const [pinCopied, setPinCopied] = useState(false);
 
   if (!agent) {
     return null;
@@ -81,6 +82,17 @@ export function CloneModal({ agent, onClose }: CloneModalProps) {
     navigator.clipboard.writeText(text);
   };
 
+  const copyPin = () => {
+    if (!success) return;
+    copyText(success.adminPin);
+    setPinCopied(true);
+  };
+
+  const handleDismiss = () => {
+    if (success && !pinCopied) return;
+    onClose();
+  };
+
   return (
     <AnimatePresence>
       <motion.div
@@ -88,7 +100,7 @@ export function CloneModal({ agent, onClose }: CloneModalProps) {
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-stone-900/40 backdrop-blur-sm"
-        onClick={onClose}
+        onClick={handleDismiss}
       >
         <motion.div
           initial={{ opacity: 0, scale: 0.95, y: 12 }}
@@ -146,11 +158,22 @@ export function CloneModal({ agent, onClose }: CloneModalProps) {
                 <div className="p-3 rounded-xl bg-orange-50 border border-orange-200 space-y-1.5">
                   <p className="text-[10px] font-mono text-orange-800 uppercase tracking-wider flex items-center gap-1.5">
                     <KeyRound className="w-3.5 h-3.5" />
-                    管理 PIN
+                    管理 PIN（只显示一次）
                   </p>
-                  <p className="text-2xl font-mono font-bold text-stone-900 tracking-[0.3em]">{success.adminPin}</p>
+                  <div className="flex items-center gap-2">
+                    <p className="text-2xl font-mono font-bold text-stone-900 tracking-[0.3em] flex-1">
+                      {success.adminPin}
+                    </p>
+                    <button
+                      type="button"
+                      onClick={copyPin}
+                      className="px-2.5 py-1.5 rounded-lg border border-orange-300 bg-white text-orange-800 text-[11px] font-semibold cursor-pointer hover:bg-orange-50"
+                    >
+                      {pinCopied ? "已复制" : "复制 PIN"}
+                    </button>
+                  </div>
                   <p className="text-[11px] text-stone-500">
-                    进后台可改提示词、LOGO 和定价文案。请先记好 PIN。
+                    进后台可改提示词、LOGO 和欢迎语。关闭前请先复制保存 PIN。
                   </p>
                   <a
                     href={success.adminUrl}
@@ -165,10 +188,11 @@ export function CloneModal({ agent, onClose }: CloneModalProps) {
 
               <button
                 type="button"
-                onClick={onClose}
-                className="w-full py-2.5 rounded-xl btn-primary text-white text-xs font-semibold cursor-pointer"
+                onClick={handleDismiss}
+                disabled={!pinCopied}
+                className="w-full py-2.5 rounded-xl btn-primary text-white text-xs font-semibold cursor-pointer disabled:opacity-40 disabled:cursor-not-allowed"
               >
-                好了
+                {pinCopied ? "好了" : "请先复制 PIN"}
               </button>
             </>
           ) : (

@@ -1,10 +1,38 @@
-import { Agent, Workflow } from "../types";
+import { Agent, AgentCategory, Workflow } from "../types";
+
+export const CATEGORY_LABELS: Record<AgentCategory, string> = {
+  parenting: "育儿",
+  travel: "旅行",
+  office: "职场",
+  programming: "编程",
+  life: "生活",
+  finance: "理财",
+  design: "设计",
+  marketing: "营销",
+  custom: "自定义",
+};
+
+export const STOREFRONT_CATEGORIES: Array<{ id: AgentCategory | "all"; label: string }> = [
+  { id: "all", label: "全部" },
+  { id: "parenting", label: "育儿" },
+  { id: "office", label: "职场" },
+  { id: "programming", label: "编程" },
+  { id: "life", label: "生活" },
+  { id: "travel", label: "旅行" },
+  { id: "finance", label: "理财" },
+  { id: "design", label: "设计" },
+  { id: "marketing", label: "营销" },
+];
+
+export function categoryLabel(category: AgentCategory): string {
+  return CATEGORY_LABELS[category] || category;
+}
 
 export const initialAgents: Agent[] = [
   {
     id: "baby_sleep",
     name: "宝宝哄睡童话家",
-    description: "根据宝宝年龄与当天兴趣，即时生成充满想象力的定制睡前睡前小故事与温馨配乐指导。",
+    description: "根据宝宝年龄与当天兴趣，即时生成充满想象力的定制睡前小故事与温馨配乐指导。",
     category: "parenting",
     avatar: "🌙",
     systemInstruction: "你是一个温柔、极其富有同理心的儿童心理专家和童话故事家。请你写一段温馨、适合哄睡的故事。语言应当充满画面感、温柔轻缓，避免任何恐怖、紧张的情节，多一些小动物的慵懒描写，并在最后写出柔和的睡前晚安祝福。",
@@ -528,7 +556,7 @@ export const initialWorkflows: Workflow[] = [
   }
 ];
 
-/** Top-N agents by runs for the storefront showcase. */
+/** @deprecated Prefer showing all agents with category filters. */
 export function getFeaturedAgents(agents: Agent[], limit = 9): Agent[] {
-  return [...agents].sort((a, b) => (b.runs || 0) - (a.runs || 0)).slice(0, limit);
+  return agents.slice(0, limit);
 }
