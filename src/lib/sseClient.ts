@@ -4,6 +4,27 @@ type SseHandler<T> = {
   finalize: (events: Record<string, unknown>[]) => T;
 };
 
+function throwHttpErrorBody(text: string, contentType: string, fallback: string): never {
+  const trimmed = text.trim();
+  if (contentType.includes("text/html") || trimmed.startsWith("<!doctype") || trimmed.startsWith("<html")) {
+    throw new Error("线上 API 未返回 JSON，可能当前部署只包含静态页面，缺少后端 API 或 EdgeOne Functions。");
+  }
+  if (!trimmed) {
+    throw new Error(fallback);
+  }
+  try {
+    const data = JSON.parse(trimmed) as { error?: string; message?: string };
+    throw new Error(data.error || data.message || fallback);
+  } catch (err) {
+    if (err instanceof SyntaxError) {
+      // Upstream returned plain text (e.g. "Error returning...") — surface it, don't leak JSON.parse noise
+      const preview = trimmed.length > 280 ? `${trimmed.slice(0, 280)}…` : trimmed;
+      throw new Error(preview);
+    }
+    throw err;
+  }
+}
+
 async function consumeSseStream<T>(
   response: Response,
   handler: SseHandler<T>,
@@ -12,27 +33,26 @@ async function consumeSseStream<T>(
 
   if (!response.ok) {
     const text = await response.text();
-    if (contentType.includes("text/html") || text.trim().startsWith("<!doctype") || text.trim().startsWith("<html")) {
-      throw new Error("线上 API 未返回 JSON，可能当前部署只包含静态页面，缺少后端 API 或 EdgeOne Functions。");
-    }
-    try {
-      const data = JSON.parse(text) as { error?: string };
-      throw new Error(data.error || "请求失败");
-    } catch (err) {
-      if (err instanceof Error && err.message !== text) throw err;
-      throw new Error(text || "请求失败");
-    }
+    throwHttpErrorBody(text, contentType, `请求失败（HTTP ${response.status}）`);
   }
 
   if (!contentType.includes("text/event-stream") || !response.body) {
     const text = await response.text();
     try {
-      const data = JSON.parse(text) as Record<string, unknown>;
+      const data = JSON.parse(text.trim()) as Record<string, unknown>;
       if (data.error) throw new Error(String(data.error));
       return handler.finalize([data]);
     } catch (err) {
-      if (err instanceof Error && err.message !== text) throw err;
-      throw new Error("服务端未返回流式响应");
+      if (err instanceof SyntaxError) {
+        const trimmed = text.trim();
+        if (trimmed) {
+          throw new Error(
+            trimmed.length > 280 ? `${trimmed.slice(0, 280)}…` : trimmed,
+          );
+        }
+        throw new Error("服务端未返回流式响应");
+      }
+      throw err;
     }
   }
 
@@ -62,7 +82,8 @@ async function consumeSseStream<T>(
           handler.onDelta?.(event.partial);
         }
       } catch (err) {
-        if (err instanceof Error && !err.message.includes("Unexpected token")) throw err;
+        if (err instanceof SyntaxError) continue;
+        throw err;
       }
     }
   }

@@ -16,9 +16,10 @@ export async function readJsonResponse<T>(response: Response, fallbackMessage: s
 
   let data: T;
   try {
-    data = JSON.parse(text) as T;
+    data = JSON.parse(trimmed) as T;
   } catch {
-    throw new Error(fallbackMessage);
+    const preview = trimmed.length > 280 ? `${trimmed.slice(0, 280)}…` : trimmed;
+    throw new Error(preview.startsWith("Error") ? preview : fallbackMessage);
   }
 
   if (!response.ok) {
