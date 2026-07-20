@@ -1,6 +1,7 @@
-const ROOT_DOMAIN = (import.meta.env.VITE_TENANT_DOMAIN || "uagent.site").toLowerCase();
+const ROOT_DOMAIN = (import.meta.env.VITE_TENANT_DOMAIN || "uagent.net").toLowerCase();
 const DEV_PORT = import.meta.env.VITE_DEV_PORT || "3000";
 
+/** Product / infra subdomains — cannot be used as tenant clone slugs */
 const RESERVED_SLUGS = new Set([
   "www",
   "api",
@@ -11,6 +12,15 @@ const RESERVED_SLUGS = new Set([
   "mail",
   "dev",
   "staging",
+  "storm",
+  "hub",
+  "agents",
+  "omni",
+  "portal",
+  "store",
+  "edu",
+  "audit",
+  "life",
 ]);
 
 export const SLUG_PATTERN = /^[a-z0-9](?:[a-z0-9-]{0,30}[a-z0-9])?$/;
@@ -27,7 +37,7 @@ export function isDevEnvironment(): boolean {
   return import.meta.env.DEV;
 }
 
-/** Parse tenant slug from hostname (*.uagent.site or *.localhost). */
+/** Parse tenant slug from hostname (*.uagent.net or *.localhost). */
 export function parseTenantFromHostname(hostname: string): string | null {
   const host = hostname.split(":")[0].toLowerCase();
 

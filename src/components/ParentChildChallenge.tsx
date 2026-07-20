@@ -307,47 +307,47 @@ export function ParentChildChallenge({
   return (
     <>
       {/* 1. COMPACT HOME/INLINE VIEW (Apple Store-Style Split Campaign Banner) */}
-      <div className="bg-gradient-to-br from-violet-950/20 via-slate-900/40 to-cyan-950/20 border border-slate-800/80 rounded-2xl p-5 md:p-6 relative overflow-hidden backdrop-blur-sm shadow-xl shadow-slate-950/20">
+      <div className="bg-white border border-stone-200 rounded-2xl p-5 md:p-6 relative overflow-hidden backdrop-blur-sm shadow-sm">
         {/* Subtle decorative glowing backdrops */}
-        <div className="absolute top-0 right-1/3 w-64 h-64 bg-violet-600/10 rounded-full blur-3xl pointer-events-none" />
-        <div className="absolute bottom-0 right-10 w-64 h-64 bg-cyan-600/10 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute top-0 right-1/3 w-64 h-64 bg-orange-50 rounded-full blur-3xl pointer-events-none" />
+        <div className="absolute bottom-0 right-10 w-64 h-64 bg-stone-100 rounded-full blur-3xl pointer-events-none" />
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 relative z-10">
           {/* Left Column: Branding Campaign & Quick Action Panel */}
           <div className="lg:col-span-5 flex flex-col justify-between space-y-4">
             <div className="space-y-2">
               <div className="flex flex-wrap items-center gap-1.5">
-                <span className="text-[10px] font-mono bg-violet-600/20 text-violet-300 px-2.5 py-0.5 rounded border border-violet-500/30 font-bold flex items-center gap-1">
-                  <Sparkles className="w-3 h-3 text-violet-400 animate-pulse" />
+                <span className="text-[10px] font-mono bg-orange-50 text-orange-800 px-2.5 py-0.5 rounded border border-orange-200 font-bold flex items-center gap-1">
+                  <Sparkles className="w-3 h-3 text-orange-700 animate-pulse" />
                   🍉 暑期重磅特辑
                 </span>
                 <span className="text-[10px] font-mono bg-amber-500/20 text-amber-300 px-2.5 py-0.5 rounded border border-amber-500/20 font-bold">
                   作品导向 · 亲子共创
                 </span>
               </div>
-              <h2 className="text-lg md:text-xl font-extrabold font-display tracking-tight text-white">
+              <h2 className="text-lg md:text-xl font-extrabold font-display tracking-tight text-stone-900">
                 亲子 AI 暑期 30 日创客挑战营
               </h2>
-              <p className="text-xs text-slate-400 leading-relaxed">
-                带领孩子完成至少 <span className="text-white font-bold underline decoration-amber-400 decoration-2">1 个</span> 自研作品，帮助孩子跳出纯消费桎梏，拥抱 AI 时代的核心创造力。
+              <p className="text-xs text-stone-500 leading-relaxed">
+                带领孩子完成至少 <span className="text-stone-900 font-bold underline decoration-amber-400 decoration-2">1 个</span> 自研作品，帮助孩子跳出纯消费桎梏，拥抱 AI 时代的核心创造力。
               </p>
             </div>
 
             {/* Micro Progress Tracker & Launch Buttons */}
             <div className="space-y-3">
-              <div className="bg-slate-950/60 border border-slate-800/60 rounded-xl p-3 flex items-center justify-between gap-4">
+              <div className="bg-stone-50 border border-stone-200 rounded-xl p-3 flex items-center justify-between gap-4">
                 <div className="flex-1 space-y-1">
                   <div className="flex justify-between items-center text-[10px] font-mono">
-                    <span className="text-slate-400 flex items-center gap-1 font-bold">
+                    <span className="text-stone-500 flex items-center gap-1 font-bold">
                       <Trophy className="w-3.5 h-3.5 text-amber-400" /> CHALLENGE MAP
                     </span>
                     <span className="text-amber-400 font-extrabold">
                       {completedList.length} / 30 关 ({percent}%)
                     </span>
                   </div>
-                  <div className="w-full bg-slate-900 rounded-full h-1.5 overflow-hidden">
+                  <div className="w-full bg-stone-100 rounded-full h-1.5 overflow-hidden">
                     <motion.div
-                      className="bg-gradient-to-r from-violet-500 to-cyan-400 h-full rounded-full"
+                      className="bg-orange-600 h-full rounded-full"
                       initial={{ width: 0 }}
                       animate={{ width: `${percent}%` }}
                       transition={{ duration: 0.5 }}
@@ -357,7 +357,7 @@ export function ParentChildChallenge({
 
                 <button
                   onClick={() => setIsModalOpen(true)}
-                  className="bg-violet-600 hover:bg-violet-500 text-white font-semibold text-xs px-3.5 py-2 rounded-lg shadow-lg shadow-violet-950/40 transition-all active:scale-95 cursor-pointer shrink-0 flex items-center gap-1"
+                  className="bg-orange-700 hover:bg-orange-600 text-white font-semibold text-xs px-3.5 py-2 rounded-lg  transition-all active:scale-95 cursor-pointer shrink-0 flex items-center gap-1"
                 >
                   <span>大地图 ({completedList.length}/30)</span>
                   <ArrowRight className="w-3.5 h-3.5" />
@@ -367,12 +367,12 @@ export function ParentChildChallenge({
           </div>
 
           {/* Right Column: Curated Recommendations Carousel Grid */}
-          <div className="lg:col-span-7 flex flex-col justify-between space-y-3 border-t lg:border-t-0 lg:border-l border-slate-800/60 pt-4 lg:pt-0 lg:pl-6">
+          <div className="lg:col-span-7 flex flex-col justify-between space-y-3 border-t lg:border-t-0 lg:border-l border-stone-200 pt-4 lg:pt-0 lg:pl-6">
             <div className="flex items-center justify-between">
-              <span className="text-[11px] font-mono font-extrabold text-slate-400 uppercase tracking-wider flex items-center gap-1">
+              <span className="text-[11px] font-mono font-extrabold text-stone-500 uppercase tracking-wider flex items-center gap-1">
                 ⭐ 今日精选入门推荐 (3/30)
               </span>
-              <span className="text-[10px] text-slate-500 hidden md:inline font-mono">
+              <span className="text-[10px] text-stone-500 hidden md:inline font-mono">
                 一键启动 ➜ 调起专属面板
               </span>
             </div>
@@ -384,17 +384,17 @@ export function ParentChildChallenge({
                   <div
                     key={item.id}
                     onClick={() => handleLaunchItem(item)}
-                    className={`border rounded-xl p-3 flex flex-col justify-between space-y-2.5 transition-all relative overflow-hidden cursor-pointer hover:border-violet-500/50 hover:bg-slate-900/40 active:scale-[0.98] group ${
+                    className={`border rounded-xl p-3 flex flex-col justify-between space-y-2.5 transition-all relative overflow-hidden cursor-pointer hover:border-orange-600/50 hover:bg-stone-50 active:scale-[0.98] group ${
                       isCompleted
                         ? "bg-emerald-950/10 border-emerald-500/20"
-                        : "bg-slate-950/40 border-slate-800"
+                        : "bg-stone-50 border-stone-200"
                     }`}
                   >
                     <div className="space-y-1">
                       <div className="flex items-center justify-between gap-2">
                         <span className={`text-[8px] font-mono px-1.5 py-0.5 rounded border font-semibold ${
-                          item.category === "A" ? "bg-violet-950/40 border-violet-800/40 text-violet-300" :
-                          item.category === "B" ? "bg-cyan-950/40 border-cyan-800/40 text-cyan-300" :
+                          item.category === "A" ? "bg-orange-50 border-orange-200 text-orange-800" :
+                          item.category === "B" ? "bg-stone-100 border-stone-300 text-stone-700" :
                           "bg-emerald-950/40 border-emerald-800/40 text-emerald-300"
                         }`}>
                           #{String(item.id).padStart(2, "0")} · {
@@ -407,28 +407,28 @@ export function ParentChildChallenge({
                           className={`w-4 h-4 rounded border flex items-center justify-center transition-all cursor-pointer ${
                             isCompleted
                               ? "bg-emerald-500/20 border-emerald-500 text-emerald-400"
-                              : "bg-slate-900 border-slate-800 text-slate-600 hover:text-slate-400"
+                              : "bg-stone-100 border-stone-200 text-stone-400 hover:text-stone-500"
                           }`}
                         >
                           <CheckCircle className="w-2.5 h-2.5" />
                         </button>
                       </div>
                       <h4 className={`font-display font-bold text-xs ${
-                        isCompleted ? "text-slate-500 line-through" : "text-white group-hover:text-violet-300 transition-colors"
+                        isCompleted ? "text-stone-500 line-through" : "text-stone-900 group-hover:text-orange-800 transition-colors"
                       }`}>
                         {item.name}
                       </h4>
-                      <p className="text-[10px] text-slate-400 leading-relaxed line-clamp-2">
+                      <p className="text-[10px] text-stone-500 leading-relaxed line-clamp-2">
                         {item.desc}
                       </p>
                     </div>
 
-                    <div className="flex items-center justify-between pt-1.5 border-t border-slate-900/60 text-[9px]">
-                      <span className="text-slate-500 font-mono">
+                    <div className="flex items-center justify-between pt-1.5 border-t border-stone-200/60 text-[9px]">
+                      <span className="text-stone-500 font-mono">
                         👶 {item.recommendAge}
                       </span>
                       <span
-                        className="text-violet-300 group-hover:text-white transition-colors font-bold flex items-center gap-0.5 cursor-pointer"
+                        className="text-orange-800 group-hover:text-stone-900 transition-colors font-bold flex items-center gap-0.5 cursor-pointer"
                       >
                         <span>一键启动</span>
                         <ArrowRight className="w-2.5 h-2.5" />
@@ -445,55 +445,55 @@ export function ParentChildChallenge({
       {/* 2. OVERLAY MODAL VIEW (Full 30 Items Challenge Dashboard) */}
       <AnimatePresence>
         {isModalOpen && (
-          <div className="fixed inset-0 z-50 overflow-y-auto bg-slate-950/90 backdrop-blur-md flex items-center justify-center p-4 md:p-6">
+          <div className="fixed inset-0 z-50 overflow-y-auto bg-white/90 backdrop-blur-md flex items-center justify-center p-4 md:p-6">
             <motion.div
               initial={{ opacity: 0, scale: 0.95, y: 15 }}
               animate={{ opacity: 1, scale: 1, y: 0 }}
               exit={{ opacity: 0, scale: 0.95, y: 15 }}
               transition={{ duration: 0.2 }}
-              className="max-w-6xl w-full bg-slate-900 border border-slate-800 rounded-2xl p-6 md:p-8 space-y-6 relative max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col"
+              className="max-w-6xl w-full bg-stone-100 border border-stone-200 rounded-2xl p-6 md:p-8 space-y-6 relative max-h-[90vh] overflow-y-auto shadow-2xl flex flex-col"
             >
               {/* Close Button */}
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="absolute top-6 right-6 w-8 h-8 rounded-full bg-slate-950 border border-slate-800 flex items-center justify-center text-slate-400 hover:text-white transition-colors cursor-pointer"
+                className="absolute top-6 right-6 w-8 h-8 rounded-full bg-white border border-stone-200 flex items-center justify-center text-stone-500 hover:text-stone-900 transition-colors cursor-pointer"
               >
                 <X className="w-4 h-4" />
               </button>
 
               {/* Header Info */}
-              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-slate-800/60 pb-6 shrink-0">
+              <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 border-b border-stone-200 pb-6 shrink-0">
                 <div className="space-y-1">
                   <div className="flex items-center gap-2">
-                    <span className="text-[10px] font-mono bg-violet-600/20 text-violet-300 px-2.5 py-0.5 rounded border border-violet-500/30 font-bold flex items-center gap-1">
-                      <Sparkles className="w-3 h-3 text-violet-400" />
+                    <span className="text-[10px] font-mono bg-orange-50 text-orange-800 px-2.5 py-0.5 rounded border border-orange-200 font-bold flex items-center gap-1">
+                      <Sparkles className="w-3 h-3 text-orange-700" />
                       🍉 暑期特辑 · 全民亲子 AI 共创挑战大地图
                     </span>
                     <span className="text-[10px] font-mono bg-amber-500/20 text-amber-300 px-2.5 py-0.5 rounded border border-amber-500/30 font-bold">
                       通关式自学
                     </span>
                   </div>
-                  <h2 className="text-xl md:text-2xl font-extrabold font-display tracking-tight text-white">
+                  <h2 className="text-xl md:text-2xl font-extrabold font-display tracking-tight text-stone-900">
                     暑假必须带孩子做的 30 个亲子 AI 项目大挑战
                   </h2>
-                  <p className="text-xs text-slate-400">
-                    我们精心设计了 30 个覆盖各种场景的精美 AI 体验包。鼓励至少挑战完 <span className="text-white font-bold underline decoration-amber-400">1个项目</span> 产生属于孩子的首个作品。
+                  <p className="text-xs text-stone-500">
+                    我们精心设计了 30 个覆盖各种场景的精美 AI 体验包。鼓励至少挑战完 <span className="text-stone-900 font-bold underline decoration-amber-400">1个项目</span> 产生属于孩子的首个作品。
                   </p>
                 </div>
 
                 {/* Progress bar in Modal */}
-                <div className="bg-slate-950/80 border border-slate-800 p-4 rounded-xl min-w-[240px] flex flex-col justify-between space-y-2">
+                <div className="bg-white border border-stone-200 p-4 rounded-xl min-w-[240px] flex flex-col justify-between space-y-2">
                   <div className="flex items-center justify-between text-xs">
-                    <span className="font-mono text-slate-400 font-bold flex items-center gap-1">
+                    <span className="font-mono text-stone-500 font-bold flex items-center gap-1">
                       <Trophy className="w-3.5 h-3.5 text-amber-500 animate-bounce" /> 暑期成就达成度
                     </span>
                     <span className="font-mono font-extrabold text-amber-400">
                       已通关 {completedList.length} / 30 项 ({percent}%)
                     </span>
                   </div>
-                  <div className="w-full bg-slate-900 rounded-full h-2 overflow-hidden border border-slate-800/60">
+                  <div className="w-full bg-stone-100 rounded-full h-2 overflow-hidden border border-stone-200">
                     <motion.div
-                      className="bg-gradient-to-r from-violet-500 to-cyan-400 h-full rounded-full"
+                      className="bg-orange-600 h-full rounded-full"
                       initial={{ width: 0 }}
                       animate={{ width: `${percent}%` }}
                       transition={{ duration: 0.4 }}
@@ -503,13 +503,13 @@ export function ParentChildChallenge({
               </div>
 
               {/* Tab Filter buttons inside Modal */}
-              <div className="flex flex-wrap items-center gap-1.5 border-b border-slate-800/60 pb-3 shrink-0">
+              <div className="flex flex-wrap items-center gap-1.5 border-b border-stone-200 pb-3 shrink-0">
                 <button
                   onClick={() => setActiveTab("all")}
                   className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold font-mono transition-all cursor-pointer border ${
                     activeTab === "all"
-                      ? "bg-violet-600 border-violet-500 text-white font-bold"
-                      : "bg-slate-950/60 border-slate-800 text-slate-400 hover:text-slate-200"
+                      ? "bg-orange-700 border-orange-600 text-white font-bold"
+                      : "bg-stone-50 border-stone-200 text-stone-500 hover:text-stone-800"
                   }`}
                 >
                   全部 30 个项目 ({challengeData.length})
@@ -518,22 +518,22 @@ export function ParentChildChallenge({
                   onClick={() => setActiveTab("A")}
                   className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold font-mono transition-all cursor-pointer border flex items-center gap-1 ${
                     activeTab === "A"
-                      ? "bg-violet-900/40 border-violet-700/60 text-violet-300 font-bold"
-                      : "bg-slate-950/60 border-slate-800 text-slate-400 hover:text-slate-200"
+                      ? "bg-orange-50 border-orange-200 text-orange-800 font-bold"
+                      : "bg-stone-50 border-stone-200 text-stone-500 hover:text-stone-800"
                   }`}
                 >
-                  <Smile className="w-3.5 h-3.5 text-violet-400" />
+                  <Smile className="w-3.5 h-3.5 text-orange-700" />
                   A. 入门兴趣阶段 (1-10)
                 </button>
                 <button
                   onClick={() => setActiveTab("B")}
                   className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold font-mono transition-all cursor-pointer border flex items-center gap-1 ${
                     activeTab === "B"
-                      ? "bg-cyan-900/40 border-cyan-700/60 text-cyan-300 font-bold"
-                      : "bg-slate-950/60 border-slate-800 text-slate-400 hover:text-slate-200"
+                      ? "bg-stone-100 border-stone-300 text-stone-700 font-bold"
+                      : "bg-stone-50 border-stone-200 text-stone-500 hover:text-stone-800"
                   }`}
                 >
-                  <Compass className="w-3.5 h-3.5 text-cyan-400" />
+                  <Compass className="w-3.5 h-3.5 text-stone-600" />
                   B. 轻量作品阶段 (11-20)
                 </button>
                 <button
@@ -541,7 +541,7 @@ export function ParentChildChallenge({
                   className={`px-3.5 py-1.5 rounded-xl text-xs font-semibold font-mono transition-all cursor-pointer border flex items-center gap-1 ${
                     activeTab === "C"
                       ? "bg-emerald-900/40 border-emerald-700/60 text-emerald-300 font-bold"
-                      : "bg-slate-950/60 border-slate-800 text-slate-400 hover:text-slate-200"
+                      : "bg-stone-50 border-stone-200 text-stone-500 hover:text-stone-800"
                   }`}
                 >
                   <Zap className="w-3.5 h-3.5 text-emerald-400" />
@@ -563,10 +563,10 @@ export function ParentChildChallenge({
                           exit={{ opacity: 0, scale: 0.95 }}
                           transition={{ duration: 0.15 }}
                           onClick={() => handleLaunchItem(item)}
-                          className={`border rounded-xl p-4 flex flex-col justify-between space-y-4 transition-all relative overflow-hidden cursor-pointer hover:border-violet-500/50 hover:bg-slate-900/40 active:scale-[0.99] group min-h-[180px] ${
+                          className={`border rounded-xl p-4 flex flex-col justify-between space-y-4 transition-all relative overflow-hidden cursor-pointer hover:border-orange-600/50 hover:bg-stone-50 active:scale-[0.99] group min-h-[180px] ${
                             isCompleted
-                              ? "bg-slate-950/40 border-emerald-500/20 shadow-lg shadow-emerald-950/10"
-                              : "bg-slate-950/70 border-slate-800"
+                              ? "bg-stone-50 border-emerald-500/20 shadow-lg shadow-emerald-950/10"
+                              : "bg-white/70 border-stone-200"
                           }`}
                         >
                           {isCompleted && (
@@ -576,8 +576,8 @@ export function ParentChildChallenge({
                           <div className="space-y-2">
                             <div className="flex items-start justify-between gap-2">
                               <span className={`text-[10px] font-mono px-2 py-0.5 rounded border font-semibold ${
-                                item.category === "A" ? "bg-violet-950/40 border-violet-800/40 text-violet-300" :
-                                item.category === "B" ? "bg-cyan-950/40 border-cyan-800/40 text-cyan-300" :
+                                item.category === "A" ? "bg-orange-50 border-orange-200 text-orange-800" :
+                                item.category === "B" ? "bg-stone-100 border-stone-300 text-stone-700" :
                                 "bg-emerald-950/40 border-emerald-800/40 text-emerald-300"
                               }`}>
                                 #{String(item.id).padStart(2, "0")} · {
@@ -591,7 +591,7 @@ export function ParentChildChallenge({
                                 className={`w-6 h-6 rounded-lg border transition-all flex items-center justify-center cursor-pointer ${
                                   isCompleted
                                     ? "bg-emerald-500/20 border-emerald-500 text-emerald-400 hover:bg-emerald-500/10"
-                                    : "bg-slate-900 border-slate-800 text-slate-600 hover:border-slate-700 hover:text-slate-400"
+                                    : "bg-stone-100 border-stone-200 text-stone-400 hover:border-stone-300 hover:text-stone-500"
                                 }`}
                               >
                                 <CheckCircle className={`w-4 h-4 ${isCompleted ? "scale-105" : "scale-90"}`} />
@@ -599,36 +599,36 @@ export function ParentChildChallenge({
                             </div>
 
                             <h3 className={`font-display font-extrabold text-sm tracking-wide transition-colors ${
-                              isCompleted ? "text-slate-500 line-through" : "text-white group-hover:text-violet-300"
+                              isCompleted ? "text-stone-500 line-through" : "text-stone-900 group-hover:text-orange-800"
                             }`}>
                               {item.name}
                             </h3>
 
-                            <p className="text-[11px] text-slate-400 leading-relaxed">
+                            <p className="text-[11px] text-stone-500 leading-relaxed">
                               {item.desc}
                             </p>
                           </div>
 
-                          <div className="flex items-center justify-between pt-2.5 border-t border-slate-900/60 shrink-0">
-                            <span className="text-[10px] font-mono text-slate-500 flex items-center gap-1 font-semibold">
-                              👶 推荐段: <span className="text-slate-300">{item.recommendAge}</span>
+                          <div className="flex items-center justify-between pt-2.5 border-t border-stone-200/60 shrink-0">
+                            <span className="text-[10px] font-mono text-stone-500 flex items-center gap-1 font-semibold">
+                              👶 推荐段: <span className="text-stone-700">{item.recommendAge}</span>
                             </span>
 
                             <span
                               className={`text-[10px] font-mono px-2.5 py-1.5 rounded-lg border flex items-center gap-1 transition-all font-bold ${
                                 item.linkedResource
-                                  ? "bg-violet-900/40 border-violet-800/60 text-violet-300 group-hover:bg-violet-800 group-hover:border-violet-600 group-hover:text-white"
-                                  : "bg-slate-900 border-slate-800 text-slate-300 group-hover:bg-slate-800 group-hover:border-slate-700 group-hover:text-white"
+                                  ? "bg-orange-50 border-orange-200/60 text-orange-800 group-hover:bg-orange-100 group-hover:border-orange-300 group-hover:text-stone-900"
+                                  : "bg-stone-100 border-stone-200 text-stone-700 group-hover:bg-stone-200 group-hover:border-stone-300 group-hover:text-stone-900"
                               }`}
                             >
                               {item.linkedResource ? (
                                 <>
-                                  <Zap className="w-3 h-3 text-cyan-400 animate-pulse" />
+                                  <Zap className="w-3 h-3 text-stone-600 animate-pulse" />
                                   <span>一键启动</span>
                                 </>
                               ) : (
                                 <>
-                                  <HelpCircle className="w-3 h-3 text-violet-400" />
+                                  <HelpCircle className="w-3 h-3 text-orange-700" />
                                   <span>导师助教</span>
                                 </>
                               )}
@@ -643,8 +643,8 @@ export function ParentChildChallenge({
               </div>
 
               {/* Slogan and Encouragement at the bottom */}
-              <div className="text-center pt-4 border-t border-slate-900/50 shrink-0">
-                <p className="text-[10px] font-mono text-slate-500 uppercase tracking-widest flex items-center justify-center gap-1.5">
+              <div className="text-center pt-4 border-t border-stone-200/50 shrink-0">
+                <p className="text-[10px] font-mono text-stone-500 uppercase tracking-widest flex items-center justify-center gap-1.5">
                   <span>●</span> 30 关亲子挑战清单由 “暑期亲子 AI 创客导师” 🍉 全力支持 <span>●</span>
                 </p>
               </div>

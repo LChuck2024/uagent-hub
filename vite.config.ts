@@ -15,7 +15,14 @@ export default defineConfig(() => {
       host: true,
       port: Number(process.env.PORT) || 3000,
       // ponytail: *.localhost resolves in modern browsers; host:true accepts any Host header
-      allowedHosts: [".localhost", "localhost", ".uagent.site", "uagent.site"],
+      allowedHosts: [
+        ".localhost",
+        "localhost",
+        ".uagent.net",
+        "uagent.net",
+        ".uagent.site",
+        "uagent.site",
+      ],
       hmr: process.env.DISABLE_HMR !== 'true',
       watch: process.env.DISABLE_HMR === 'true' ? null : {},
     },

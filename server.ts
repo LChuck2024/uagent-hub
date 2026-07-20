@@ -23,7 +23,7 @@ const API_VERSION = "edge-v2";
 
 app.use(express.json({ limit: "10mb" }));
 
-// Host slug resolution — *.uagent.site / *.localhost (no ?tenant= query)
+// Host slug resolution — *.uagent.net / *.localhost (no ?tenant= query)
 app.use((req, res, next) => {
   req.tenantSlug = resolveTenantSlug(req.hostname);
   if (req.tenantSlug) {

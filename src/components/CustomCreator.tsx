@@ -156,24 +156,24 @@ export function CustomCreator({ onCreated, onCancel }: CustomCreatorProps) {
   const avatarPresets = ["🤖", "🌙", "✈️", "💼", "💻", "🍳", "🧠", "🎨", "📈", "🩺", "⚡", "🌟", "🔥", "🪐"];
 
   return (
-    <div className="glass-panel p-6 lg:p-8 rounded-2xl border border-slate-800 flex flex-col gap-6 max-w-4xl mx-auto my-4 shadow-xl">
+    <div className="glass-panel p-6 lg:p-8 rounded-2xl border border-stone-200 flex flex-col gap-6 max-w-4xl mx-auto my-4 shadow-xl">
       {/* Header */}
-      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-slate-800 pb-5">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 border-b border-stone-200 pb-5">
         <div>
-          <h2 className="font-display font-bold text-xl text-white tracking-wide flex items-center gap-2">
-            <Sparkles className="w-5 h-5 text-cyan-400" />
+          <h2 className="font-display font-bold text-xl text-stone-900 tracking-wide flex items-center gap-2">
+            <Sparkles className="w-5 h-5 text-stone-600" />
             自定义设计总线
           </h2>
-          <p className="text-xs text-slate-400 mt-1">创建您自己专属的AI Agent人格或多维度串联的大模型工作流。</p>
+          <p className="text-xs text-stone-500 mt-1">创建您自己专属的AI Agent人格或多维度串联的大模型工作流。</p>
         </div>
 
-        <div className="flex bg-slate-950 p-1 rounded-xl border border-slate-800/80 shrink-0">
+        <div className="flex bg-white p-1 rounded-xl border border-stone-200 shrink-0">
           <button
             onClick={() => setActiveTab("agent")}
             className={`text-xs font-semibold px-4 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
               activeTab === "agent"
-                ? "bg-violet-600 text-white shadow-inner"
-                : "text-slate-400 hover:text-slate-200"
+                ? "bg-orange-700 text-white shadow-inner"
+                : "text-stone-500 hover:text-stone-800"
             }`}
           >
             <Bot className="w-4 h-4" />
@@ -183,8 +183,8 @@ export function CustomCreator({ onCreated, onCancel }: CustomCreatorProps) {
             onClick={() => setActiveTab("workflow")}
             className={`text-xs font-semibold px-4 py-1.5 rounded-lg transition-all cursor-pointer flex items-center gap-1.5 ${
               activeTab === "workflow"
-                ? "bg-cyan-600 text-white shadow-inner"
-                : "text-slate-400 hover:text-slate-200"
+                ? "bg-stone-800 text-white shadow-inner"
+                : "text-stone-500 hover:text-stone-800"
             }`}
           >
             <Zap className="w-4 h-4" />
@@ -198,33 +198,33 @@ export function CustomCreator({ onCreated, onCancel }: CustomCreatorProps) {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-slate-300">智能体名称</label>
+              <label className="text-xs font-semibold text-stone-700">智能体名称</label>
               <input
                 type="text"
                 value={agentName}
                 onChange={(e) => setAgentName(e.target.value)}
                 placeholder="例如: 日语情景对话私教"
-                className="w-full bg-slate-950 border border-slate-800 hover:border-slate-700 focus:border-violet-500 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-violet-500/30 transition-all"
+                className="w-full bg-white border border-stone-200 hover:border-stone-300 focus:border-orange-600 rounded-xl px-3 py-2 text-sm text-stone-900 focus:outline-none focus:ring-1 focus:ring-orange-600/20 transition-all"
               />
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-slate-300">智能体简介</label>
+              <label className="text-xs font-semibold text-stone-700">智能体简介</label>
               <textarea
                 value={agentDesc}
                 onChange={(e) => setAgentDesc(e.target.value)}
                 placeholder="简短描述智能体的用途和核心能力"
-                className="w-full bg-slate-950 border border-slate-800 hover:border-slate-700 focus:border-violet-500 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:ring-1 focus:ring-violet-500/30 transition-all resize-none h-16"
+                className="w-full bg-white border border-stone-200 hover:border-stone-300 focus:border-orange-600 rounded-xl px-3 py-2 text-xs text-stone-900 focus:outline-none focus:ring-1 focus:ring-orange-600/20 transition-all resize-none h-16"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-slate-300">行业品类归属</label>
+                <label className="text-xs font-semibold text-stone-700">行业品类归属</label>
                 <select
                   value={agentCategory}
                   onChange={(e) => setAgentCategory(e.target.value as AgentCategory)}
-                  className="w-full bg-slate-950 border border-slate-800 hover:border-slate-700 focus:border-violet-500 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:ring-1 focus:ring-violet-500/30 transition-all"
+                  className="w-full bg-white border border-stone-200 hover:border-stone-300 focus:border-orange-600 rounded-xl px-3 py-2 text-xs text-stone-900 focus:outline-none focus:ring-1 focus:ring-orange-600/20 transition-all"
                 >
                   <option value="parenting">亲子成长</option>
                   <option value="travel">全球旅游</option>
@@ -238,7 +238,7 @@ export function CustomCreator({ onCreated, onCancel }: CustomCreatorProps) {
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-slate-300">创造温度 (Temperature)</label>
+                <label className="text-xs font-semibold text-stone-700">创造温度 (Temperature)</label>
                 <input
                   type="range"
                   min="0.1"
@@ -248,7 +248,7 @@ export function CustomCreator({ onCreated, onCancel }: CustomCreatorProps) {
                   onChange={(e) => setAgentTemp(parseFloat(e.target.value))}
                   className="w-full mt-2"
                 />
-                <div className="flex justify-between text-[10px] text-slate-500 font-mono">
+                <div className="flex justify-between text-[10px] text-stone-500 font-mono">
                   <span>严谨精确 ({agentTemp})</span>
                   <span>创意无限</span>
                 </div>
@@ -256,16 +256,16 @@ export function CustomCreator({ onCreated, onCancel }: CustomCreatorProps) {
             </div>
 
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-slate-300">形象图标 / 徽章</label>
-              <div className="flex flex-wrap gap-2 bg-slate-950 p-2.5 rounded-xl border border-slate-800">
+              <label className="text-xs font-semibold text-stone-700">形象图标 / 徽章</label>
+              <div className="flex flex-wrap gap-2 bg-white p-2.5 rounded-xl border border-stone-200">
                 {avatarPresets.map(preset => (
                   <button
                     key={preset}
                     onClick={() => setAgentAvatar(preset)}
                     className={`w-8 h-8 rounded-lg flex items-center justify-center text-sm transition-all cursor-pointer ${
                       agentAvatar === preset
-                        ? "bg-violet-600/30 border border-violet-500 text-white"
-                        : "hover:bg-slate-900 border border-transparent text-slate-400"
+                        ? "bg-orange-700/30 border border-orange-600 text-orange-900"
+                        : "hover:bg-stone-100 border border-transparent text-stone-500"
                     }`}
                   >
                     {preset}
@@ -279,23 +279,23 @@ export function CustomCreator({ onCreated, onCancel }: CustomCreatorProps) {
           <div className="flex flex-col gap-4">
             <div className="flex flex-col gap-1.5">
               <div className="flex justify-between items-center">
-                <label className="text-xs font-semibold text-slate-300">系统提示词 (System Instruction)</label>
-                <span className="text-[10px] text-slate-500">极其重要：限制AI行为与人格</span>
+                <label className="text-xs font-semibold text-stone-700">系统提示词 (System Instruction)</label>
+                <span className="text-[10px] text-stone-500">极其重要：限制AI行为与人格</span>
               </div>
               <textarea
                 value={agentPrompt}
                 onChange={(e) => setAgentPrompt(e.target.value)}
                 placeholder="例如: 你是一位极其温柔、发音纯正的日语私教老师。你的语气很可爱，喜欢在句尾加上 'ね'。你需要对用户的输入进行纠错、提供日语罗马音发音，并给出一个实用的跟读短句..."
-                className="w-full bg-slate-950 border border-slate-800 hover:border-slate-700 focus:border-violet-500 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:ring-1 focus:ring-violet-500/30 transition-all resize-none h-28"
+                className="w-full bg-white border border-stone-200 hover:border-stone-300 focus:border-orange-600 rounded-xl px-3 py-2 text-xs text-stone-900 focus:outline-none focus:ring-1 focus:ring-orange-600/20 transition-all resize-none h-28"
               />
             </div>
 
             <div className="flex flex-col gap-2">
-              <div className="flex justify-between items-center border-t border-slate-800/80 pt-3">
-                <label className="text-xs font-semibold text-slate-300">定义智能体变量</label>
+              <div className="flex justify-between items-center border-t border-stone-200 pt-3">
+                <label className="text-xs font-semibold text-stone-700">定义智能体变量</label>
                 <button
                   onClick={addAgentVar}
-                  className="text-[11px] text-violet-400 hover:text-violet-300 flex items-center gap-0.5 cursor-pointer"
+                  className="text-[11px] text-orange-700 hover:text-orange-800 flex items-center gap-0.5 cursor-pointer"
                 >
                   <Plus className="w-3.5 h-3.5" /> 增加变量
                 </button>
@@ -303,27 +303,27 @@ export function CustomCreator({ onCreated, onCancel }: CustomCreatorProps) {
 
               <div className="space-y-2 max-h-36 overflow-y-auto pr-1">
                 {agentVars.map((v, idx) => (
-                  <div key={idx} className="flex gap-2 items-center bg-slate-950/60 p-2 rounded-lg border border-slate-900">
+                  <div key={idx} className="flex gap-2 items-center bg-stone-50 p-2 rounded-lg border border-stone-200">
                     <input
                       type="text"
                       value={v.name}
                       onChange={(e) => updateAgentVar(idx, "name", e.target.value)}
                       placeholder="变量名(英文)"
-                      className="w-1/4 bg-slate-900 border border-slate-800 rounded px-2 py-1 text-[11px] text-white"
+                      className="w-1/4 bg-stone-100 border border-stone-200 rounded px-2 py-1 text-[11px] text-stone-900"
                     />
                     <input
                       type="text"
                       value={v.label}
                       onChange={(e) => updateAgentVar(idx, "label", e.target.value)}
                       placeholder="表单标签"
-                      className="w-1/3 bg-slate-900 border border-slate-800 rounded px-2 py-1 text-[11px] text-white"
+                      className="w-1/3 bg-stone-100 border border-stone-200 rounded px-2 py-1 text-[11px] text-stone-900"
                     />
                     <input
                       type="text"
                       value={v.placeholder || ""}
                       onChange={(e) => updateAgentVar(idx, "placeholder", e.target.value)}
                       placeholder="占位提示"
-                      className="flex-1 bg-slate-900 border border-slate-800 rounded px-2 py-1 text-[11px] text-white"
+                      className="flex-1 bg-stone-100 border border-stone-200 rounded px-2 py-1 text-[11px] text-stone-900"
                     />
                     <button
                       onClick={() => removeAgentVar(idx)}
@@ -342,23 +342,23 @@ export function CustomCreator({ onCreated, onCancel }: CustomCreatorProps) {
         <div className="flex flex-col gap-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex flex-col gap-1.5">
-              <label className="text-xs font-semibold text-slate-300">自动化工作流名称</label>
+              <label className="text-xs font-semibold text-stone-700">自动化工作流名称</label>
               <input
                 type="text"
                 value={wfName}
                 onChange={(e) => setWfName(e.target.value)}
                 placeholder="例如: 英语文章润色与推特卡片制作流"
-                className="w-full bg-slate-950 border border-slate-800 hover:border-slate-700 focus:border-cyan-500 rounded-xl px-3 py-2 text-sm text-white focus:outline-none focus:ring-1 focus:ring-cyan-500/30 transition-all"
+                className="w-full bg-white border border-stone-200 hover:border-stone-300 focus:border-orange-600 rounded-xl px-3 py-2 text-sm text-stone-900 focus:outline-none focus:ring-1 focus:ring-orange-600/20 transition-all"
               />
             </div>
 
             <div className="grid grid-cols-2 gap-4">
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-slate-300">品类归属</label>
+                <label className="text-xs font-semibold text-stone-700">品类归属</label>
                 <select
                   value={wfCategory}
                   onChange={(e) => setWfCategory(e.target.value as AgentCategory)}
-                  className="w-full bg-slate-950 border border-slate-800 hover:border-slate-700 focus:border-cyan-500 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:ring-1 focus:ring-cyan-500/30 transition-all"
+                  className="w-full bg-white border border-stone-200 hover:border-stone-300 focus:border-orange-600 rounded-xl px-3 py-2 text-xs text-stone-900 focus:outline-none focus:ring-1 focus:ring-orange-600/20 transition-all"
                 >
                   <option value="parenting">亲子成长</option>
                   <option value="travel">全球旅游</option>
@@ -372,28 +372,28 @@ export function CustomCreator({ onCreated, onCancel }: CustomCreatorProps) {
               </div>
 
               <div className="flex flex-col gap-1.5">
-                <label className="text-xs font-semibold text-slate-300">工作流描述</label>
+                <label className="text-xs font-semibold text-stone-700">工作流描述</label>
                 <input
                   type="text"
                   value={wfDesc}
                   onChange={(e) => setWfDesc(e.target.value)}
                   placeholder="一句简短的工作流效果总结"
-                  className="w-full bg-slate-950 border border-slate-800 hover:border-slate-700 focus:border-cyan-500 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:ring-1 focus:ring-cyan-500/30 transition-all"
+                  className="w-full bg-white border border-stone-200 hover:border-stone-300 focus:border-orange-600 rounded-xl px-3 py-2 text-xs text-stone-900 focus:outline-none focus:ring-1 focus:ring-orange-600/20 transition-all"
                 />
               </div>
             </div>
           </div>
 
           {/* Step 1: Initial Trigger Inputs Setup */}
-          <div className="flex flex-col gap-2 border-t border-slate-800/80 pt-4">
+          <div className="flex flex-col gap-2 border-t border-stone-200 pt-4">
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-cyan-400" />
-                <h4 className="text-xs font-semibold text-slate-200">第一步：配置初始触发参数 (Trigger Inputs)</h4>
+                <span className="w-1.5 h-1.5 rounded-full bg-orange-500" />
+                <h4 className="text-xs font-semibold text-stone-800">第一步：配置初始触发参数 (Trigger Inputs)</h4>
               </div>
               <button
                 onClick={addWfTrigger}
-                className="text-[11px] text-cyan-400 hover:text-cyan-300 flex items-center gap-0.5 cursor-pointer"
+                className="text-[11px] text-stone-600 hover:text-stone-700 flex items-center gap-0.5 cursor-pointer"
               >
                 <Plus className="w-3.5 h-3.5" /> 增加触发变量
               </button>
@@ -401,28 +401,28 @@ export function CustomCreator({ onCreated, onCancel }: CustomCreatorProps) {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-2 max-h-32 overflow-y-auto">
               {wfTriggers.map((t, idx) => (
-                <div key={idx} className="flex gap-2 items-center bg-slate-950/60 p-2 rounded-lg border border-slate-900">
-                  <div className="text-[10px] text-slate-500 font-mono">Var:</div>
+                <div key={idx} className="flex gap-2 items-center bg-stone-50 p-2 rounded-lg border border-stone-200">
+                  <div className="text-[10px] text-stone-500 font-mono">Var:</div>
                   <input
                     type="text"
                     value={t.name}
                     onChange={(e) => updateWfTrigger(idx, "name", e.target.value)}
                     placeholder="变量名"
-                    className="w-1/4 bg-slate-900 border border-slate-800 rounded px-2 py-0.5 text-[11px] text-white"
+                    className="w-1/4 bg-stone-100 border border-stone-200 rounded px-2 py-0.5 text-[11px] text-stone-900"
                   />
                   <input
                     type="text"
                     value={t.label}
                     onChange={(e) => updateWfTrigger(idx, "label", e.target.value)}
                     placeholder="表单标语"
-                    className="w-1/3 bg-slate-900 border border-slate-800 rounded px-2 py-0.5 text-[11px] text-white"
+                    className="w-1/3 bg-stone-100 border border-stone-200 rounded px-2 py-0.5 text-[11px] text-stone-900"
                   />
                   <input
                     type="text"
                     value={t.placeholder || ""}
                     onChange={(e) => updateWfTrigger(idx, "placeholder", e.target.value)}
                     placeholder="默认占位提示"
-                    className="flex-1 bg-slate-900 border border-slate-800 rounded px-2 py-0.5 text-[11px] text-white"
+                    className="flex-1 bg-stone-100 border border-stone-200 rounded px-2 py-0.5 text-[11px] text-stone-900"
                   />
                   <button
                     onClick={() => removeWfTrigger(idx)}
@@ -436,15 +436,15 @@ export function CustomCreator({ onCreated, onCancel }: CustomCreatorProps) {
           </div>
 
           {/* Step 2: Sequential Multi-steps Construction */}
-          <div className="flex flex-col gap-4 border-t border-slate-800/80 pt-4">
+          <div className="flex flex-col gap-4 border-t border-stone-200 pt-4">
             <div className="flex justify-between items-center">
               <div className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-violet-400" />
-                <h4 className="text-xs font-semibold text-slate-200">第二步：排布大模型顺序推理步骤 (AI Steps)</h4>
+                <span className="w-1.5 h-1.5 rounded-full bg-orange-500" />
+                <h4 className="text-xs font-semibold text-stone-800">第二步：排布大模型顺序推理步骤 (AI Steps)</h4>
               </div>
               <button
                 onClick={addWfStep}
-                className="text-[11px] text-violet-400 hover:text-violet-300 flex items-center gap-0.5 cursor-pointer bg-violet-950/30 border border-violet-900/50 px-2.5 py-1 rounded-lg"
+                className="text-[11px] text-orange-700 hover:text-orange-800 flex items-center gap-0.5 cursor-pointer bg-orange-50 border border-orange-200 px-2.5 py-1 rounded-lg"
               >
                 <Plus className="w-3.5 h-3.5" /> 追加顺序处理步骤
               </button>
@@ -452,9 +452,9 @@ export function CustomCreator({ onCreated, onCancel }: CustomCreatorProps) {
 
             <div className="space-y-4 max-h-72 overflow-y-auto pr-1">
               {wfSteps.map((step, idx) => (
-                <div key={idx} className="bg-slate-950/40 border border-slate-800 rounded-xl p-4 flex flex-col gap-3 relative">
+                <div key={idx} className="bg-stone-50 border border-stone-200 rounded-xl p-4 flex flex-col gap-3 relative">
                   <div className="absolute top-4 right-4 flex items-center gap-2">
-                    <span className="text-[10px] bg-slate-900 px-2 py-0.5 border border-slate-800 rounded text-slate-500 font-mono">
+                    <span className="text-[10px] bg-stone-100 px-2 py-0.5 border border-stone-200 rounded text-stone-500 font-mono">
                       步骤 ID: {step.id}
                     </span>
                     <button
@@ -467,20 +467,20 @@ export function CustomCreator({ onCreated, onCancel }: CustomCreatorProps) {
 
                   <div className="flex flex-col md:flex-row gap-3 w-[80%]">
                     <div className="flex flex-col gap-1">
-                      <span className="text-[10px] font-semibold text-slate-400">步骤名称</span>
+                      <span className="text-[10px] font-semibold text-stone-500">步骤名称</span>
                       <input
                         type="text"
                         value={step.name}
                         onChange={(e) => updateWfStep(idx, "name", e.target.value)}
-                        className="bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1 text-xs text-white"
+                        className="bg-stone-100 border border-stone-200 rounded-lg px-2.5 py-1 text-xs text-stone-900"
                       />
                     </div>
                     <div className="flex flex-col gap-1">
-                      <span className="text-[10px] font-semibold text-slate-400">步骤行为 (AIGC Type)</span>
+                      <span className="text-[10px] font-semibold text-stone-500">步骤行为 (AIGC Type)</span>
                       <select
                         value={step.type}
                         onChange={(e) => updateWfStep(idx, "type", e.target.value)}
-                        className="bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1 text-xs text-white"
+                        className="bg-stone-100 border border-stone-200 rounded-lg px-2.5 py-1 text-xs text-stone-900"
                       >
                         <option value="ai_generate">模型生成 (Generate)</option>
                         <option value="ai_transform">语义提炼 (Transform)</option>
@@ -489,14 +489,14 @@ export function CustomCreator({ onCreated, onCancel }: CustomCreatorProps) {
                       </select>
                     </div>
                     <div className="flex flex-col gap-1">
-                      <span className="text-[10px] font-semibold text-slate-400">
-                        输出变量名 <span className="text-[9px] text-slate-500">(可被后续步骤引用)</span>
+                      <span className="text-[10px] font-semibold text-stone-500">
+                        输出变量名 <span className="text-[9px] text-stone-500">(可被后续步骤引用)</span>
                       </span>
                       <input
                         type="text"
                         value={step.outputVarName}
                         onChange={(e) => updateWfStep(idx, "outputVarName", e.target.value)}
-                        className="bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1 text-xs text-violet-400 font-mono font-bold"
+                        className="bg-stone-100 border border-stone-200 rounded-lg px-2.5 py-1 text-xs text-orange-700 font-mono font-bold"
                       />
                     </div>
                   </div>
@@ -504,10 +504,10 @@ export function CustomCreator({ onCreated, onCancel }: CustomCreatorProps) {
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-1">
                     <div className="flex flex-col gap-1">
                       <div className="flex justify-between items-center text-[10px]">
-                        <span className="font-semibold text-slate-400">
+                        <span className="font-semibold text-stone-500">
                           提示词模板 (Prompt Template)
                         </span>
-                        <span className="text-slate-500 font-mono">
+                        <span className="text-stone-500 font-mono">
                           引参语法: {`{{trigger.var}}`} 或 {`{{step_1_output}}`}
                         </span>
                       </div>
@@ -515,19 +515,19 @@ export function CustomCreator({ onCreated, onCancel }: CustomCreatorProps) {
                         value={step.promptTemplate}
                         onChange={(e) => updateWfStep(idx, "promptTemplate", e.target.value)}
                         placeholder="例如: 请翻译以下上一步生成的内容：\n{{step1_output}}"
-                        className="bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white resize-none h-18"
+                        className="bg-stone-100 border border-stone-200 rounded-lg px-2.5 py-1.5 text-xs text-stone-900 resize-none h-18"
                       />
                     </div>
 
                     <div className="flex flex-col gap-1">
-                      <span className="text-[10px] font-semibold text-slate-400">
+                      <span className="text-[10px] font-semibold text-stone-500">
                         系统约束 (System Instruction - 可选)
                       </span>
                       <textarea
                         value={step.systemInstruction || ""}
                         onChange={(e) => updateWfStep(idx, "systemInstruction", e.target.value)}
                         placeholder="限定该步骤大模型的人格和输出规范"
-                        className="bg-slate-900 border border-slate-800 rounded-lg px-2.5 py-1.5 text-xs text-white resize-none h-18"
+                        className="bg-stone-100 border border-stone-200 rounded-lg px-2.5 py-1.5 text-xs text-stone-900 resize-none h-18"
                       />
                     </div>
                   </div>
@@ -539,16 +539,16 @@ export function CustomCreator({ onCreated, onCancel }: CustomCreatorProps) {
       )}
 
       {/* Buttons Action */}
-      <div className="flex justify-end gap-3 border-t border-slate-800 pt-5">
+      <div className="flex justify-end gap-3 border-t border-stone-200 pt-5">
         <button
           onClick={onCancel}
-          className="px-5 py-2 rounded-xl bg-slate-900 border border-slate-800 hover:bg-slate-800 text-xs text-slate-300 font-semibold transition-all cursor-pointer"
+          className="px-5 py-2 rounded-xl bg-stone-100 border border-stone-200 hover:bg-stone-200 text-xs text-stone-700 font-semibold transition-all cursor-pointer"
         >
           取消
         </button>
         <button
           onClick={activeTab === "agent" ? handleSaveAgent : handleSaveWorkflow}
-          className="px-6 py-2 rounded-xl bg-linear-to-r from-cyan-600 to-violet-600 hover:from-cyan-500 hover:to-violet-500 text-white text-xs font-semibold shadow-md shadow-violet-900/20 hover:shadow-violet-500/20 transition-all cursor-pointer flex items-center gap-1.5"
+          className="px-6 py-2 rounded-xl btn-primary text-white text-xs font-semibold  transition-all cursor-pointer flex items-center gap-1.5"
         >
           <Check className="w-4 h-4" />
           <span>确认发布并共享到社区</span>

@@ -1,32 +1,46 @@
-import { Link } from "react-router-dom";
-import { Sparkles } from "lucide-react";
+import { Link, NavLink } from "react-router-dom";
+import { getSuiteProducts } from "../../data/suiteProducts";
+
+const navClass = ({ isActive }: { isActive: boolean }) =>
+  `text-xs font-medium transition-colors ${
+    isActive ? "text-stone-900" : "text-stone-500 hover:text-stone-800"
+  }`;
 
 export function MainHeader() {
+  const api = getSuiteProducts().find((p) => p.id === "api");
+
   return (
-    <header className="relative z-10 border-b border-slate-800/80 bg-slate-950/60 backdrop-blur-md px-4 py-4 md:px-8">
+    <header className="relative z-10 border-b border-stone-200 bg-stone-50/90 backdrop-blur-sm px-4 py-4 md:px-8">
       <div className="max-w-7xl mx-auto flex justify-between items-center gap-4">
         <Link to="/" className="flex items-center gap-3 group">
-          <div className="w-10 h-10 rounded-xl bg-linear-to-tr from-cyan-500 to-violet-600 flex items-center justify-center shadow-lg shadow-violet-500/20 pulse-glow">
-            <Sparkles className="w-5 h-5 text-white" />
+          <div className="w-9 h-9 rounded-lg bg-stone-900 text-stone-50 flex items-center justify-center font-display font-extrabold text-sm tracking-tight">
+            uA
           </div>
           <div>
-            <h1 className="font-display font-extrabold text-lg text-white tracking-wider flex items-center gap-2">
+            <h1 className="font-display font-extrabold text-lg text-stone-900 tracking-tight">
               uAgent
-              <span className="text-xs font-mono font-normal px-2 py-0.5 bg-violet-900/40 text-violet-300 border border-violet-800 rounded-full">
-                STORE
-              </span>
             </h1>
-            <p className="text-[10px] text-slate-400 font-medium tracking-wider">
-              AI 智能体应用商店 · uagent.site
+            <p className="text-[10px] text-stone-500 font-medium tracking-wide">
+              大模型 API 与智能体
             </p>
           </div>
         </Link>
 
-        <div className="hidden sm:flex items-center gap-2 text-[10px] font-mono text-slate-500">
-          <span className="px-2 py-1 rounded-lg border border-slate-800 bg-slate-950/80">
-            一键克隆 · 专属子域名
-          </span>
-        </div>
+        <nav className="flex items-center gap-4 sm:gap-6">
+          <NavLink to="/agents" className={navClass}>
+            试用智能体
+          </NavLink>
+          {api && (
+            <a
+              href={api.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="hidden sm:inline text-xs font-medium text-stone-500 hover:text-orange-700 transition-colors"
+            >
+              接入 API
+            </a>
+          )}
+        </nav>
       </div>
     </header>
   );

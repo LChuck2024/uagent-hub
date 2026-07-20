@@ -39,7 +39,7 @@ export function Markdown({ content }: MarkdownProps) {
   const renderTextBlock = (text: string, blockIdx: number) => {
     const lines = text.split("\n");
     return (
-      <div key={`text-block-${blockIdx}`} className="space-y-2 text-slate-300">
+      <div key={`text-block-${blockIdx}`} className="space-y-2 text-stone-700">
         {lines.map((line, lineIdx) => {
           const trimmed = line.trim();
 
@@ -51,21 +51,21 @@ export function Markdown({ content }: MarkdownProps) {
           // Headers
           if (trimmed.startsWith("### ")) {
             return (
-              <h4 key={lineIdx} className="text-md font-bold text-cyan-400 font-display mt-3">
+              <h4 key={lineIdx} className="text-md font-bold text-stone-600 font-display mt-3">
                 {parseInlineFormatting(trimmed.substring(4))}
               </h4>
             );
           }
           if (trimmed.startsWith("## ")) {
             return (
-              <h3 key={lineIdx} className="text-lg font-bold text-violet-400 font-display mt-4">
+              <h3 key={lineIdx} className="text-lg font-bold text-orange-700 font-display mt-4">
                 {parseInlineFormatting(trimmed.substring(3))}
               </h3>
             );
           }
           if (trimmed.startsWith("# ")) {
             return (
-              <h2 key={lineIdx} className="text-xl font-extrabold text-white font-display mt-5">
+              <h2 key={lineIdx} className="text-xl font-extrabold text-stone-900 font-display mt-5">
                 {parseInlineFormatting(trimmed.substring(2))}
               </h2>
             );
@@ -95,7 +95,7 @@ export function Markdown({ content }: MarkdownProps) {
           // Blockquotes
           if (trimmed.startsWith("> ")) {
             return (
-              <blockquote key={lineIdx} className="border-l-4 border-violet-500 bg-violet-950/20 px-3 py-1 my-2 rounded-r italic text-slate-300">
+              <blockquote key={lineIdx} className="border-l-4 border-orange-600 bg-orange-50 px-3 py-1 my-2 rounded-r italic text-stone-700">
                 {parseInlineFormatting(trimmed.substring(2))}
               </blockquote>
             );
@@ -126,20 +126,20 @@ export function Markdown({ content }: MarkdownProps) {
       if (m[1]) {
         // Bold
         parts.push(
-          <strong key={m.index} className="font-semibold text-white">
+          <strong key={m.index} className="font-semibold text-stone-900">
             {m[2]}
           </strong>
         );
       } else if (m[3]) {
         // Inline code
         parts.push(
-          <code key={m.index} className="font-mono text-xs bg-slate-800 text-cyan-300 px-1.5 py-0.5 rounded border border-slate-700">
+          <code key={m.index} className="font-mono text-xs bg-stone-200 text-stone-700 px-1.5 py-0.5 rounded border border-stone-300">
             {m[4]}
           </code>
         );
       } else if (m[5]) {
         // Italic
-        parts.push(<em key={m.index} className="italic text-slate-200">{m[6]}</em>);
+        parts.push(<em key={m.index} className="italic text-stone-800">{m[6]}</em>);
       }
       idx = inlineRegex.lastIndex;
     }
@@ -152,22 +152,22 @@ export function Markdown({ content }: MarkdownProps) {
   };
 
   return (
-    <div className="prose-custom space-y-3 text-slate-300">
+    <div className="prose-custom space-y-3 text-stone-700">
       {blocks.map((block, idx) => {
         if (block.type === "code") {
           return (
-            <div key={`code-block-${idx}`} className="my-3 rounded-lg border border-slate-800 overflow-hidden shadow-lg">
-              <div className="bg-slate-900 px-4 py-1.5 flex justify-between items-center text-xs text-slate-400 font-mono border-b border-slate-800">
+            <div key={`code-block-${idx}`} className="my-3 rounded-lg border border-stone-200 overflow-hidden shadow-lg">
+              <div className="bg-stone-100 px-4 py-1.5 flex justify-between items-center text-xs text-stone-500 font-mono border-b border-stone-200">
                 <span>{block.lang || "code"}</span>
                 <button
                   onClick={() => navigator.clipboard.writeText(block.text)}
-                  className="hover:text-white transition-colors cursor-pointer"
+                  className="hover:text-stone-900 transition-colors cursor-pointer"
                   title="复制代码"
                 >
                   复制
                 </button>
               </div>
-              <pre className="p-4 bg-[#0a0f1d] overflow-x-auto text-xs font-mono text-cyan-100">
+              <pre className="p-4 bg-stone-900 overflow-x-auto text-xs font-mono text-stone-200">
                 <code>{block.text}</code>
               </pre>
             </div>
